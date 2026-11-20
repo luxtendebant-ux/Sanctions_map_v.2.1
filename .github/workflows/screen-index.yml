@@ -1,0 +1,109 @@
+name: Индекс, календарь и проверка источников
+
+on:
+  schedule:
+    - cron: "17 6,22 * * *"
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - map-data-open.json
+      - .github/screen/**
+      - .github/workflows/screen-index.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: map-data-main
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+      pages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Собрать открытую выгрузку и календарь
+        run: |
+          python3 -I .github/screen/export_open_map.py index.html map-data-open.json
+          python3 -I .github/screen/build_deadlines_ics.py map-data-open.json deadlines.ics
+          python3 -I .github/screen/cm2_sync.py "$RUNNER_TEMP/agents" --map=map-data-open.json
+      - name: Восстановить начальный индекс из проверенного снимка
+        run: |
+          if [[ ! -f screen-index.json ]]; then
+            url=https://raw.githubusercontent.com/luxtendebant-ux/Sanctions_map_v.2.0/9b7639125bf8073944ff8ae5c5d528d6b553282f/screen-index.json
+            curl --fail --location --retry 3 --max-time 120 "$url" -o "$RUNNER_TEMP/seed.json"
+            test "$(git hash-object "$RUNNER_TEMP/seed.json")" = ec30bbf037a4030f61272777ad2cfabb4bb9aae4
+            mv "$RUNNER_TEMP/seed.json" screen-index.json
+          fi
+      - name: Проверить шесть официальных списков
+        if: github.event_name != 'push'
+        run: python3 -I .github/screen/build_screen_index.py .
+      - name: Проверить собранный индекс и календарь
+        run: |
+          set -o pipefail
+          python3 -I .github/screen/validate_index.py | tee -a "$GITHUB_STEP_SUMMARY"
+          python3 -I - <<'PY'
+          from pathlib import Path
+          import json
+          m = json.loads(Path("map-data-open.json").read_text())
+          ics = Path("deadlines.ics").read_text()
+          assert ics.startswith("BEGIN:VCALENDAR\n") and ics.endswith("END:VCALENDAR\n")
+          assert ics.count("BEGIN:VEVENT\n") == len(m["deadlines"]["items"])
+          print("Срез:", m["meta"]["cut"], "событий:", len(m["deadlines"]["items"]))
+          PY
+      - name: Сохранить пакет для аналитических агентов
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-map-brief
+          path: ${{ runner.temp }}/agents/
+          retention-days: 14
+          if-no-files-found: error
+      - name: Опубликовать производные данные
+        id: publish
+        run: |
+          git add -- map-data-open.json deadlines.ics screen-index.json screen-delta.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Обновление данных карты $(date -u +%FT%RZ)"
+          git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Обновить сайт после коммита бота
+        if: steps.publish.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" >/dev/null; then
+            echo "::warning::GitHub Pages не принял запрос сборки. Проверьте Settings → Pages → Deploy from a branch → main → / (root)."
+          fi
+
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Проверить источники изменившихся карточек
+        run: |
+          python3 -I .github/screen/export_open_map.py index.html "$RUNNER_TEMP/current.json"
+          python3 -I .github/screen/verify_prepare.py "$RUNNER_TEMP/verify-pack.json" --map="$RUNNER_TEMP/current.json"
+          python3 -I - "$RUNNER_TEMP/verify-pack.json" >> "$GITHUB_STEP_SUMMARY" <<'PY'
+          import json, sys
+          with open(sys.argv[1], encoding="utf-8") as report:
+              data = json.load(report)
+          print(f"Срез {data['cut']}. Карточек проверено: {data['cards']}. "
+                f"Недоступных ссылок: {data['linkFail']}. Замечаний для проверки: {data['mechanical']}.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-verification
+          path: ${{ runner.temp }}/verify-pack.json
+          retention-days: 14
+          if-no-files-found: error
