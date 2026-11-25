@@ -43,9 +43,14 @@ async function run() {
     const loc = selector => page.locator(selector);
     const visible = selector => loc(selector).first().waitFor({state:'visible'});
     async function tab(name) {
+      await page.waitForTimeout(60);
       const button = loc('.tabbtn[data-view="' + name + '"]');
-      if (!(await button.isVisible())) await loc('#tabMenuBtn').click();
-      await button.click();
+      if (!(await button.isVisible())) {
+        const menuOpen = await loc('#viewTabs').evaluate(el => el.classList.contains('open'));
+        if (!menuOpen) await loc('#tabMenuBtn').click();
+        await button.waitFor({state:'visible'});
+      }
+      await button.click({force:true});
     }
     await page.goto(origin);
     const cards = loc('#sectionsContainer .card[data-sec]');
@@ -64,9 +69,24 @@ async function run() {
     await visible('#modalTitle');
     assert.ok((await loc('#modalSource a').count()) > 0);
     await loc('#modalClose').click();
-    for (const [name, selector] of [['guide','#viewGuide'],['export','#viewExport'],['ru','#viewRu'],['fatca','#viewFatca'],['workplace','#wsLock'],['events','#evLock']]) {
+    for (const [name, selector] of [['guide','#viewGuide'],['export','#viewExport'],['ru','#viewRu'],['justice','#viewJustice'],['fatca','#viewFatca'],['workplace','#wsLock'],['events','#evLock']]) {
       await tab(name); await visible(selector);
     }
+    await tab('justice');
+    const justiceCards = loc('#justiceContainer .card[data-justicesec]');
+    assert.ok(await justiceCards.count() >= 15, 'bringing-to-justice cards are missing');
+    await loc('#justiceSearchInput').fill('Суворов');
+    assert.equal(await justiceCards.count(), 1);
+    await justiceCards.first().click(); await visible('#modalTitle');
+    assert.ok((await loc('#modalSource a').count()) > 0); await loc('#modalClose').click();
+    await loc('#btnJusticeSearchClear').click();
+    await tab('fatca');
+    const fatcaUpdateCard = loc('#fatcaCardsContainer .card[data-fatcasec]');
+    assert.equal(await fatcaUpdateCard.count(), 1);
+    await tab('map');
+    const badChangeLinks = await page.evaluate(() => [...document.querySelectorAll('#changelogList button.lnk,#changelogRest button.lnk')].filter(b => !openCardByRef(b.dataset.refGroup,b.dataset.refSec,b.dataset.refTitle)).map(b => `${b.dataset.refGroup}/${b.dataset.refSec}/${b.dataset.refTitle}`));
+    assert.deepEqual(badChangeLinks, [], 'changelog contains a link to a missing card');
+    await loc('#modalClose').click();
     console.log('PASS open tabs, search, filters, card and source (' + total + ' initial cards)');
 
     async function gate(input, button, error, keyFile, success) {
@@ -82,6 +102,7 @@ async function run() {
         await visible(success);
       }
     }
+    await tab('events');
     await gate('#evPassInput','#evPassSubmit','#evPassError','cm-events-key.txt','#evApp');
     if (keyDir) {
       for(let i=0; i<8; i++) await loc('#evApp .ev-nav button').nth(i).click();
@@ -122,6 +143,13 @@ async function run() {
       const first = sample(); await new Promise(resolve => setTimeout(resolve,450)); return first !== sample();
     });
     assert.ok(pixelsChange, 'background animation changes rendered pixels');
+    const iceMotion = await page.evaluate(() => {
+      const before = getComputedStyle(document.body,'::before');
+      const after = getComputedStyle(document.body,'::after');
+      return [before.animationName,before.animationPlayState,after.animationName,after.animationPlayState];
+    });
+    assert.notEqual(iceMotion[0], 'none'); assert.equal(iceMotion[1], 'running');
+    assert.notEqual(iceMotion[2], 'none'); assert.equal(iceMotion[3], 'running');
     await page.setViewportSize({width:390,height:844});
     await tab('guide'); await visible('#viewGuide');
     await tab('map'); await visible('#viewMap');

@@ -12,6 +12,8 @@ PUBLIC_FIELDS = {
     "sections": "SECTIONS",
     "exportControl": "EXPORT_CONTROL",
     "russianMeasures": "RUSSIAN_MEASURES",
+    "enforcement": "ENFORCEMENT",
+    "fatcaCards": "FATCA_CARDS",
     "rumors": "RUMORS",
     "comparison": "COMPARISON",
     "deadlines": "DEADLINES",
@@ -34,7 +36,7 @@ def read_public_fields(html):
             raise ValueError(f"{name} must contain a complete JSON literal")
         result[field] = value
     dt.datetime.strptime(result["meta"]["cut"], "%d.%m.%Y")
-    for group in ("sections", "exportControl", "russianMeasures"):
+    for group in ("sections", "exportControl", "russianMeasures", "enforcement", "fatcaCards"):
         if not result[group] or not all(isinstance(s.get("items"), list) for s in result[group]):
             raise ValueError(f"Missing public cards in {group}")
     return result

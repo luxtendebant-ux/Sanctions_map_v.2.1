@@ -677,8 +677,11 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
   #waterBG {background-color:#2b7898; background-image:radial-gradient(ellipse at 72% 24%,rgba(137,220,239,.76),rgba(24,91,119,.80) 72%);}
   /* The photographic ice covers the whole workspace, not only the hero. The
      second copy restores darker fissure detail after the light screen layer. */
-  body::before {content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background-image:linear-gradient(rgba(164,231,244,.18),rgba(35,117,145,.12)),var(--ice-photo,none); background-size:cover; background-position:50% 48%; opacity:.68; mix-blend-mode:screen; filter:saturate(.82) brightness(1.12) contrast(1.32);}
-  body::after {content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background-image:var(--ice-photo,none); background-size:cover; background-position:50% 48%; opacity:.24; mix-blend-mode:multiply; filter:grayscale(.45) brightness(1.16) contrast(1.78);}
+  body::before {content:""; position:fixed; inset:-4%; z-index:-1; pointer-events:none; background-image:linear-gradient(rgba(164,231,244,.18),rgba(35,117,145,.12)),var(--ice-photo,none); background-size:cover; background-position:50% 48%; opacity:.68; mix-blend-mode:screen; filter:saturate(.82) brightness(1.12) contrast(1.32); transform-origin:50% 50%; animation:ice-sheet-drift 26s ease-in-out infinite alternate; will-change:transform,background-position;}
+  body::after {content:""; position:fixed; inset:-5%; z-index:-1; pointer-events:none; background-image:var(--ice-photo,none); background-size:cover; background-position:50% 48%; opacity:.24; mix-blend-mode:multiply; filter:grayscale(.45) brightness(1.16) contrast(1.78); transform-origin:52% 47%; animation:ice-crack-drift 18s ease-in-out infinite alternate; will-change:transform,background-position,opacity;}
+  @keyframes ice-sheet-drift {0%{transform:scale(1.035) translate3d(-.8%,-.45%,0);background-position:48.8% 47.2%;}50%{transform:scale(1.055) rotate(.18deg) translate3d(.3%,.7%,0);background-position:50.6% 49%;}100%{transform:scale(1.04) rotate(-.12deg) translate3d(.9%,-.15%,0);background-position:51.4% 47.8%;}}
+  @keyframes ice-crack-drift {0%{transform:scale(1.04) translate3d(.55%,-.35%,0);background-position:50.8% 47.5%;opacity:.21;}48%{transform:scale(1.065) rotate(-.22deg) translate3d(-.5%,.55%,0);background-position:49.1% 49.1%;opacity:.28;}100%{transform:scale(1.045) rotate(.16deg) translate3d(-.85%,-.2%,0);background-position:48.4% 48%;opacity:.23;}}
+  body.ice-paused::before,body.ice-paused::after {animation-play-state:paused;}
   #waterBG {z-index:-2;}
   header.top {background:#081e34f7; border-bottom:1px solid #7995af59; backdrop-filter:blur(10px);}
   header.top .bar {padding-block:10px;}
@@ -707,9 +710,11 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
   .hero-stats div {border:0; padding:0;}
   .hero-stats .num {color:#fff; font-size:clamp(20px,2.2vw,32px); line-height:1.1; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-.04em;}
   .hero-stats .lbl {color:#dcebf5; line-height:1.35; font-size:12px; margin-top:4px;}
-  #viewMap,#viewGuide,#viewExport,#viewRu,#viewFatca,#viewRestricted,#viewEvents,#viewWorkplace {background:transparent;}
+  #viewMap,#viewGuide,#viewExport,#viewRu,#viewJustice,#viewFatca,#viewRestricted,#viewEvents,#viewWorkplace {background:transparent;}
   .category,.guide-section {background:rgba(211,238,246,.14); border-color:rgba(255,255,255,.42);}
   .category.panel-alt,.guide-section.panel-alt {background:rgba(231,247,251,.24);}
+  #sectionsContainer>.category {background:transparent;}
+  #sectionsContainer>.category.panel-alt {background:rgba(255,255,255,.34);}
   .cat-head {border-bottom:1px solid rgba(255,255,255,.78);}
   .cat-head h2,.cat-head p,.cat-count,.wl-h {color:#fff; text-shadow:0 2px 5px rgba(4,38,55,.72);}
   .cat-head h2 {font-weight:700; letter-spacing:-.025em;}
@@ -752,6 +757,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
   @media(prefers-reduced-motion:reduce) {
     html {scroll-behavior:auto;}
     *,*::before,*::after {animation-duration:.01ms!important; transition-duration:.01ms!important;}
+    body::before,body::after {animation:none!important;}
   }
 }
 @media print {#waterBG,body::before,body::after {display:none!important;}}
@@ -775,6 +781,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
       <button class="tabbtn" data-view="guide"><span class="tab-dot red"></span><span class="tab-label-full">МЕТОДОЛОГИЯ И ИСТОЧНИКИ</span><span class="tab-label-short">МЕТОДОЛОГИЯ</span></button>
       <button class="tabbtn" data-view="export"><span class="tab-dot yellow"></span><span class="tab-label-full">ЭКСПОРТНЫЙ КОНТРОЛЬ</span><span class="tab-label-short">ЭКСПОРТ</span></button>
       <button class="tabbtn" data-view="ru"><span class="tab-dot ruflag"></span><span class="tab-label-full">РОССИЙСКИЕ МЕРЫ / ЭКСПОРТНЫЕ ОГРАНИЧЕНИЯ</span><span class="tab-label-short">МЕРЫ РФ</span></button>
+      <button class="tabbtn" data-view="justice"><span class="tab-dot" style="background:#ff8a3d;"></span><span class="tab-label-full">BRINGING TO JUSTICE</span><span class="tab-label-short">JUSTICE</span></button>
       <span class="tab-break" aria-hidden="true"></span><button class="tabbtn" data-view="fatca"><span class="tab-dot" style="background:#2f6fed;"></span><span class="tab-label-full">FATCA/CRS/ORS</span><span class="tab-label-short">FATCA/CRS/ORS</span></button>
       <button class="tabbtn" data-view="workplace"><span class="tab-dot" style="background:#00c1d7;"></span><span class="tab-label-full">РАБОЧЕЕ МЕСТО СК</span><span class="tab-label-short">РАБОЧЕЕ МЕСТО СК</span></button>
       <button class="tabbtn" data-view="events"><span class="tab-dot" style="background:#7DD3FC;"></span><span class="tab-label-full">ВНЕШНИЕ МЕРОПРИЯТИЯ</span><span class="tab-label-short">МЕРОПРИЯТИЯ</span></button>
@@ -783,7 +790,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
     </div>
     </div>
     <div class="right-cluster">
-      <span class="badge-live"><span class="dotpulse"></span>СРЕЗ ДАННЫХ: <span id="headerCutoff">25.11.2026</span><span class="ot-sep"> · </span><span id="headerUpdatedAt">03:39 (CET, Амстердам)</span><span class="ot-sep"> · </span><span id="mapRelease"></span><span class="ot-sep"> · </span><span id="openedToday"></span></span>
+      <span class="badge-live"><span class="dotpulse"></span>СРЕЗ ДАННЫХ: <span id="headerCutoff">25.11.2026</span><span class="ot-sep"> · </span><span id="headerUpdatedAt">08:13 (CET, Амстердам)</span><span class="ot-sep"> · </span><span id="mapRelease"></span><span class="ot-sep"> · </span><span id="openedToday"></span></span>
       <div class="header-actions">
         <button class="btn btn-small" id="btnExec">Сводка для руководства</button>
         <button class="btn btn-small" id="btnPrint">Печать / PDF</button>
@@ -898,7 +905,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
     <div>
       <h2>Как пользоваться картой</h2>
       <p>Кликните по карточке меры, чтобы увидеть полное описание, статус, охват и ссылку на первоисточник. Фильтруйте по юрисдикции, статусу или области регулирования — теги можно комбинировать. Раздел «Слухи и шум» вынесен отдельно и не является основанием для комплаенс-решений.</p>
-      <p>Карта — статичный срез на <span id="shareCutoff">25.11.2026</span>, обновлён <span id="shareUpdatedAt">25.11.2026, 03:39 (CET, Амстердам)</span>. Для операционных решений всегда проверяйте первоисточник по указанной ссылке на актуальную дату.</p>
+      <p>Карта — статичный срез на <span id="shareCutoff">25.11.2026</span>, обновлён <span id="shareUpdatedAt">25.11.2026, 08:13 (CET, Амстердам)</span>. Для операционных решений всегда проверяйте первоисточник по указанной ссылке на актуальную дату.</p>
     </div>
     <div class="share-actions">
       <button class="btn btn-solid" id="btnPrint2">Сохранить / распечатать срез</button>
@@ -1147,6 +1154,34 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
 </div><!-- /viewRu -->
 
 
+<div id="viewJustice" style="display:none;">
+  <section class="hero" style="padding:56px 0 40px;">
+    <div class="wrap">
+      <div class="inner">
+        <span class="eyebrow">Enforcement monitor · подтверждено по состоянию на 25.11.2026</span>
+        <h1 style="font-size:clamp(28px,3.8vw,48px);">Bringing to justice</h1>
+        <p class="lead">Подтверждённые уголовные, административные и гражданско-правовые меры за нарушение санкций, экспортного и таможенного контроля, а также AML/CFT-требований. Стадия каждого дела указана отдельно: обвинение или арест не означают виновность; окончательный вывод делается только по приговору, признанию вины или вступившему в силу решению регулятора.</p>
+        <div class="search-box">
+          <input type="text" id="justiceSearchInput" aria-label="Поиск по делам о нарушении санкций и экспортного контроля" name="cm-search-justice" placeholder="Поиск по лицу, компании, стране или нарушению…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="">
+          <button class="btn btn-solid" id="btnJusticeSearchClear">Сбросить</button>
+        </div>
+        <div class="hero-stats" id="justiceHeroStats"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="guide-section">
+    <div class="wrap prose">
+      <h3>Периметр и правила чтения</h3>
+      <p>Включены только идентифицируемые дела и решения из официальных сообщений органов власти либо из прямо атрибутированных сообщений государственных информационных агентств. Для незавершённых производств используется формулировка «подозревается / обвиняется» и сохраняется презумпция невиновности. Страницы SECO Швейцарии и DFAT Австралии используются как каналы мониторинга режима и санкций, но не превращены в «кейсы», поскольку предоставленные страницы не описывают конкретное привлечение лица к ответственности.</p>
+      <p class="modal-footnote" style="max-width:920px;">Срез не является исчерпывающим реестром всех дел за весь период действия санкций. Он охватывает подтверждённые материалы 2025–2026 годов, найденные в официальных источниках карты и в источниках, переданных пользователем; новые решения добавляются при каждом обновлении.</p>
+    </div>
+  </section>
+
+  <main id="justiceContainer"></main>
+</div><!-- /viewJustice -->
+
+
 
 
 <div id="viewFatca" style="display:none;">
@@ -1160,6 +1195,8 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
       </div>
     </div>
   </section>
+
+  <main id="fatcaCardsContainer"></main>
 
   <section class="guide-section">
     <div class="wrap prose">
@@ -1549,7 +1586,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
   <div class="wrap">
     <div>
       <div class="fbrand">КОМПЛАЕНС-КАРТА · WEEKLY RUSSIAN SANCTIONS MONITORING</div>
-      <div>Срез на <span id="footerCutoff">25.11.2026</span> · обновлён <span id="footerUpdatedAt">25.11.2026, 03:39 (CET, Амстердам)</span> · <span id="footerRelease"></span> · аналитический материал, не юридическое заключение · окончательное решение — за пользователем</div>
+      <div>Срез на <span id="footerCutoff">25.11.2026</span> · обновлён <span id="footerUpdatedAt">25.11.2026, 08:13 (CET, Амстердам)</span> · <span id="footerRelease"></span> · аналитический материал, не юридическое заключение · окончательное решение — за пользователем</div>
       <div style="margin-top:5px;max-width:640px;">⚠ Карта актуальна строго на указанную дату среза и требует постоянной актуализации комплаенс-офицером — не используйте устаревший срез для операционных решений без проверки первоисточников по ссылкам в карточках.</div>
       <div style="margin-top:8px;">© Все права защищены 2026. Автор: Вяселев Руслан Равилевич / Vyaselev Ruslan Ravilevich.</div>
     </div>
@@ -6391,11 +6428,247 @@ let OFFICER_CONCLUSION = {
    EXEC_SUMMARY    — одностраничная сводка для руководства (главное за период и действия).
    Поля карточек: verified («Сверено», ДД.ММ.ГГГГ), verifiedApprox, expires (ISO, срок действия меры),
    history и archiveId (число прежних редакций и идентификатор записи в CARD_ARCHIVE). */
+let FATCA_CARDS = [
+  {
+    "id":"fatca",
+    "title":"Последние подтверждённые изменения",
+    "subtitle":"Карточки обновлений FATCA / CRS / OFAC ORS, на которые ведёт changelog.",
+    "items":[
+      {
+        "status":"active",
+        "date":"25.11.2026",
+        "title":"ФНС: формат 5.07 применяется с отчётного периода 2026 года; срок подачи — 31.05.2027",
+        "desc":"Организации финансового рынка представляют сведения о клиентах — иностранных налоговых резидентах по формату 5.07 начиная с отчётного периода 2026 года; международный обмен переводится на CRS 3.0 с 01.01.2027.",
+        "detail":"Изменение учтено в операционном календаре вкладки. Перед подачей необходимо сверить актуальные формат, схему, контрольные соотношения и разъяснения ФНС; санкционная отчётность OFAC ORS остаётся отдельной обязанностью и не заменяется налоговым обменом.",
+        "tags":["ФНС","CRS 3.0","формат 5.07","31.05.2027"],
+        "source":{"label":"ФНС России — автоматический обмен финансовой информацией","url":"https://www.nalog.gov.ru/rn77/related_activities/international_cooperation/automatic_exchange/","level":"A"},
+        "verified":"25.11.2026"
+      }
+    ]
+  }
+];
+
+let ENFORCEMENT = [
+  {
+    "id":"justice-us-criminal",
+    "title":"США — уголовные дела",
+    "subtitle":"DOJ: признание вины, приговоры, обвинения и аресты по схемам поставок в Россию.",
+    "items":[
+      {
+        "status":"active","stage":"Признание вины","date":"24.11.2026",
+        "title":"Александр Суворов признал вину в организации поставок американской электроники в Россию",
+        "desc":"Гражданин России, ранее проживавший в Швеции, признал сговор с целью нарушения ECRA: сеть через гонконгские компании закупала в США компоненты двойного назначения и перенаправляла их российским конечным пользователям.",
+        "detail":"DOJ указывает период схемы с марта 2022 по апрель 2023 года и платежи американским поставщикам более чем на $70 тыс. Назначение наказания запланировано на 29.03.2027; максимальная санкция по предъявленному составу — до 20 лет лишения свободы и штраф до $1 млн.",
+        "tags":["Россия","ECRA","электроника","реэкспорт"],
+        "source":{"label":"U.S. Department of Justice, 24.11.2026","url":"https://www.justice.gov/opa/pr/russian-national-pleads-guilty-evading-economic-sanctions-russia","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"pending","stage":"Арест и обвинение — вина не установлена","date":"27.10.2026",
+        "title":"Илья Панков арестован по обвинению в поставках оборудования в Россию через Турцию, Корею и Казахстан",
+        "desc":"В Сиэтле предъявлено обвинение по 12 эпизодам: сговор, незаконный экспорт контролируемых товаров, контрабанда, ложные заявления и отмывание денег. Панков заявил о невиновности.",
+        "detail":"По версии обвинения, после февраля 2022 года товары направлялись через подставных покупателей в третьих странах, а в документах CBP скрывался российский конечный пользователь. Карточка фиксирует только процессуальную стадию; действует презумпция невиновности.",
+        "tags":["Россия","обвинение","третьи страны","оборудование"],
+        "source":{"label":"U.S. Attorney’s Office, Western District of Washington, 27.10.2026","url":"https://www.justice.gov/usao-wdwa/pr/seattle-man-arrested-indictment-illegally-shipping-restricted-items-russia-going","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Приговор","date":"28.10.2026",
+        "title":"Яна Леонова приговорена к 12 месяцам и одному дню за незаконные поставки авиакомпонентов в Россию",
+        "desc":"Гражданка Беларуси, проживавшая в России, использовала компании, ложные документы и посредников для отправки американских авиационных компонентов в Россию через Армению.",
+        "detail":"Суд округа Колумбия назначил лишение свободы и постановил депортировать Леонову в Беларусь после отбытия наказания. Основание — нарушение Export Control Reform Act.",
+        "tags":["Россия","авиация","Армения","приговор"],
+        "source":{"label":"U.S. Attorney’s Office, District of Columbia, 28.10.2026","url":"https://www.justice.gov/usao-dc/pr/belarusian-woman-sentenced-dc-illegally-exporting-us-sourced-aviation-components-russia","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Вердикт присяжных","date":"23.09.2026",
+        "title":"Кирилл Гордей признан виновным в контрабанде масс-спектрометра в Россию",
+        "desc":"Федеральные присяжные в Массачусетсе признали руководителя экспедиторской компании виновным в сговоре, контрабанде и экспорте контролируемого масс-спектрометра без лицензии.",
+        "detail":"Назначение наказания было назначено на 12.01.2027. Карточка отражает вынесенный обвинительный вердикт, но не итоговый срок наказания.",
+        "tags":["Россия","лабораторное оборудование","контрабанда","вердикт"],
+        "source":{"label":"U.S. Attorney’s Office, District of Massachusetts, 23.09.2026","url":"https://www.justice.gov/usao-ma/pr/dual-citizen-convicted-smuggling-goods-united-states-russia","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Признание вины","date":"14.09.2026",
+        "title":"Андрей Самуиловский признал вину в поставках авиационных и аэрокосмических товаров в Россию",
+        "desc":"Гражданин Эстонии, Швейцарии и России признал участие в схеме поставок компонентов американского происхождения российским конечным пользователям без лицензий BIS.",
+        "detail":"DOJ описывает период схемы с начала 2022 года по сентябрь 2024 года. Наказание было назначено к определению 13.01.2027; максимальная санкция — 20 лет лишения свободы.",
+        "tags":["Россия","авиация","Швейцария","признание вины"],
+        "source":{"label":"U.S. Department of Justice, 14.09.2026","url":"https://www.justice.gov/opa/pr/russian-national-pleads-guilty-smuggling-us-aerospace-goods-russia","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Вердикт присяжных","date":"28.08.2026",
+        "title":"Александр Мамонов признан виновным в незаконном экспорте авиазапчастей в Россию и «Аэрофлоту»",
+        "desc":"Присяжные во Флориде признали гражданина России виновным по всем предъявленным эпизодам схемы поставок авиационных деталей в обход экспортного контроля США.",
+        "detail":"Схема использовала маршрутизацию через Южную Флориду и посредников. Карточка отражает обвинительный вердикт; итоговый срок следует сверять по последующим публикациям суда и DOJ.",
+        "tags":["Россия","Аэрофлот","авиазапчасти","вердикт"],
+        "source":{"label":"U.S. Attorney’s Office, Southern District of Florida, 28.08.2026","url":"https://www.justice.gov/usao-sdfl/pr/russian-national-living-florida-convicted-scheme-illegally-export-aircraft-parts-us","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Приговор","date":"18.08.2025",
+        "title":"Вадим Ермоленко приговорён к 30 месяцам за экспортную и санкционную схему в интересах России",
+        "desc":"Гражданин США и России получил 30 месяцев лишения свободы и конфискацию $75 547 за участие в сети закупки электроники двойного назначения и боеприпасов для российских военных и разведывательных структур.",
+        "detail":"DOJ сообщает, что через контролируемые счета прошло более $12 млн; часть экспортно-контролируемых снайперских боеприпасов была перехвачена в Эстонии.",
+        "tags":["Россия","электроника","боеприпасы","отмывание денег"],
+        "source":{"label":"U.S. Attorney’s Office, Eastern District of New York, 18.08.2025","url":"https://www.justice.gov/usao-edny/pr/new-jersey-resident-sentenced-30-months-prison-role-global-export-control-and","level":"A"},"verified":"25.11.2026"
+      }
+    ]
+  },
+  {
+    "id":"justice-us-admin","title":"США — OFAC, BIS и FinCEN",
+    "subtitle":"Гражданские штрафы и административные соглашения по санкциям, экспортному контролю и AML.",
+    "items":[
+      {
+        "status":"active","stage":"Штраф OFAC","date":"24.11.2025",
+        "title":"OFAC взыскал $4 677 552 с инвестора за операции с недвижимостью заблокированного российского лица",
+        "desc":"Физическое лицо умышленно распоряжалось жилой недвижимостью, принадлежавшей заблокированному лицу: оформляло ипотеку, ремонтировало и продало объект третьему лицу.",
+        "detail":"Нарушения санкций против России и отчётности совершались с апреля 2023 по март 2024 года; OFAC квалифицировал их как вопиющие и не заявленные добровольно.",
+        "tags":["OFAC","Россия","недвижимость","физическое лицо"],
+        "source":{"label":"OFAC Recent Actions, 24.11.2025","url":"https://ofac.treasury.gov/recent-actions/20251124_33","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Мировое соглашение OFAC","date":"09.12.2025",
+        "title":"Фидуциарий траста российского олигарха выплатил OFAC $1 092 000",
+        "desc":"Лицо урегулировало ответственность за 122 предполагаемых нарушения: управление заблокированным имуществом и оказание запрещённых услуг санкционному российскому олигарху.",
+        "detail":"OFAC указал период с апреля 2018 по июнь 2022 года, существенное сотрудничество с расследованием и отсутствие добровольного самораскрытия.",
+        "tags":["OFAC","Россия","траст","услуги"],
+        "source":{"label":"OFAC Recent Actions, 09.12.2025","url":"https://ofac.treasury.gov/recent-actions/20251209_33","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Соглашение BIS","date":"24.08.2026",
+        "title":"Container Manufacturing Ltd. — штраф BIS $1 млн за десять нарушений при поставках в Россию",
+        "desc":"Компания признала восемь эпизодов запрещённого поведения и два эпизода действий со знанием нарушения при экспорте запасных частей для оборудования по производству алюминиевых банок российскому конечному пользователю.",
+        "detail":"Стоимость поставленных без требуемой лицензии товаров указана как $264 721. Соглашение предусматривает гражданский штраф $1 млн и риск годового лишения экспортных привилегий при неуплате.",
+        "tags":["BIS","Россия","промышленное оборудование","штраф"],
+        "source":{"label":"BIS Settlement Agreement, 24.08.2026","url":"https://www.bis.gov/media/documents/container-manufacturing-ltd-8-24-2026.pdf","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Штраф FinCEN","date":"06.03.2026",
+        "title":"Canaccord Genuity LLC — исторический AML-штраф FinCEN $80 млн",
+        "desc":"Брокер-дилер признал умышленные нарушения BSA: неэффективную AML-программу, недостаточную проверку клиентов и неподачу как минимум 160 SAR.",
+        "detail":"FinCEN назвал это крупнейшим штрафом BSA для брокера-дилера. Среди высокорисковых клиентов упомянуто лицо, которое, по сообщениям, помогало российским олигархам выводить средства из России.",
+        "tags":["FinCEN","BSA","AML","SAR"],
+        "source":{"label":"FinCEN, 06.03.2026","url":"https://www.fincen.gov/news/news-releases/fincen-assesses-historic-80-million-penalty-against-canaccord-genuity-llc","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Штраф FinCEN","date":"09.12.2025",
+        "title":"Paxful — штраф FinCEN $3,5 млн за умышленные нарушения BSA",
+        "desc":"P2P-платформа виртуальных валют признала отсутствие регистрации MSB, эффективной AML-программы и SAR; через неё прошло более $500 млн подозрительной активности.",
+        "detail":"Дело не является Russia-specific: FinCEN указал операции с Ираном, КНДР, Венесуэлой и иными незаконными участниками. Карточка включена в заявленный пользователем широкий AML-периметр раздела.",
+        "tags":["FinCEN","BSA","криптовалюта","AML"],
+        "source":{"label":"FinCEN, 09.12.2025","url":"https://www.fincen.gov/news/news-releases/fincen-assesses-35-million-penalty-against-paxful-facilitating-suspicious","level":"A"},"verified":"25.11.2026"
+      }
+    ]
+  },
+  {
+    "id":"justice-uk","title":"Великобритания",
+    "subtitle":"Приговоры, OFSI penalties и HMRC compound settlements по российскому режиму.",
+    "items":[
+      {
+        "status":"active","stage":"Приговор","date":"11.04.2025",
+        "title":"Дмитрий и Алексей Овсянниковы осуждены по первому уголовному делу UK о нарушении российских финансовых санкций",
+        "desc":"Дмитрий Овсянников получил 40 месяцев лишения свободы, Алексей Овсянников — 15 месяцев условно на 15 месяцев; суд рассматривал нарушения финансовых санкций и отмывание денег.",
+        "detail":"CPS описывает использование банковского счёта, переводов, автомобиля и банковской карты в интересах обозначенного лица. Это первое сообщение CPS о вынесении приговоров за нарушение российских санкций в Великобритании.",
+        "tags":["UK","уголовное дело","финансовые санкции","приговор"],
+        "source":{"label":"Crown Prosecution Service, 11.04.2025","url":"https://www.cps.gov.uk/cy/node/26150","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Штраф OFSI","date":"20.03.2025",
+        "title":"HSF Moscow — штраф OFSI £465 000 за платежи обозначенным лицам",
+        "desc":"Шесть платежей на общую сумму £3 932 392,10 были сделаны обозначенным лицам при закрытии московского офиса; OFSI указал недостаточную проверку и санкционный скрининг.",
+        "detail":"Добровольное раскрытие со стороны HSF London обеспечило 50-процентное снижение итогового штрафа.",
+        "tags":["OFSI","Россия","юридические услуги","добровольное раскрытие"],
+        "source":{"label":"OFSI, HSF Moscow Penalty, 04.04.2025","url":"https://ofsi.blog.gov.uk/2025/04/04/hsf-moscow-penalty-key-lessons-for-industry/","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Штраф OFSI","date":"11.04.2025",
+        "title":"Svarog Shipping & Trading — первый штраф OFSI £5 000 за информационное нарушение",
+        "desc":"Компания не ответила в срок на обязательный запрос информации OFSI и не представила разумного оправдания задержки.",
+        "detail":"OFSI установил информационное нарушение, но не установил иных нарушений финансовых санкций по существу расследуемых операций.",
+        "tags":["OFSI","запрос информации","морские перевозки","штраф"],
+        "source":{"label":"OFSI, Svarog Penalty, 08.05.2025","url":"https://ofsi.blog.gov.uk/2025/05/08/svarog-penalty-a-lesson-in-information-offences/","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Соглашение HMRC","date":"08.09.2026",
+        "title":"Illumina Cambridge Limited выплатила HMRC £7 438 840,13 за поставки санкционных товаров для экспорта в Россию",
+        "desc":"HMRC заключила compound settlement вместо уголовного преследования за участие в внутригрупповой поставке санкционных товаров для последующего экспорта в Россию и другие направления.",
+        "detail":"Нарушения относятся к июлю 2022 — январю 2023 года; компания добровольно сообщила о них, а правительство указало на недостатки внутренних контролей.",
+        "tags":["HMRC","Россия","compound settlement","самораскрытие"],
+        "source":{"label":"GOV.UK — agreed compound settlements, 08.09.2026","url":"https://www.gov.uk/government/publications/businesses-agreeing-to-a-compound-settlement-for-strategic-export-and-sanction-offences/agreed-compound-settlements-for-strategic-export-and-sanction-offences","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"active","stage":"Соглашение HMRC","date":"29.06.2026",
+        "title":"Petrofac Facilities Management Limited — £569 157 за поставки санкционных промышленных товаров в Россию",
+        "desc":"Компания выплатила compound settlement за поставку санкционных промышленных товаров лицам, связанным с Россией, и техническую помощь при сворачивании российского бизнеса.",
+        "detail":"Petrofac добровольно сообщила о нарушениях и сотрудничала с расследованием; это первая публично названная HMRC компания в таком settlement.",
+        "tags":["HMRC","Россия","промышленные товары","техническая помощь"],
+        "source":{"label":"GOV.UK — agreed compound settlements, 29.06.2026","url":"https://www.gov.uk/government/publications/businesses-agreeing-to-a-compound-settlement-for-strategic-export-and-sanction-offences/agreed-compound-settlements-for-strategic-export-and-sanction-offences","level":"A"},"verified":"25.11.2026"
+      }
+    ]
+  },
+  {
+    "id":"justice-eu","title":"Европейский союз и государства-члены",
+    "subtitle":"EPPO и национальные органы: завершённые дела и расследования с прямой связью с российскими ограничениями.",
+    "items":[
+      {
+        "status":"active","stage":"Приговор и признание вины","date":"31.08.2026",
+        "title":"Литва: двое граждан Беларуси и компания осуждены за мошенничество при сокрытии связей с российской военной промышленностью",
+        "desc":"EPPO сообщила о признании вины, возмещении €447 272 и штрафах за ложные заявления об отсутствии связей с организациями, подпадающими под ограничительные меры ЕС.",
+        "detail":"Суд Вильнюса назначил штрафы отцу, сыну и контролируемой компании. Дело квалифицировано как мошенничество с субсидиями и подделка документов; связь с санкциями была элементом ложного допуска к финансированию и рынку ЕС.",
+        "tags":["ЕС","Литва","EPPO","субсидии"],
+        "source":{"label":"European Public Prosecutor’s Office, 31.08.2026","url":"https://www.eppo.europa.eu/media/news/investigation-precision-belarusian-citizens-concealing-links-russian-military-industry-convicted-2026-08-31_en","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"pending","stage":"Расследование — вина не установлена","date":"17.07.2026",
+        "title":"Польша: директор компании допрошен по делу о ввозе российской берёзовой фанеры под видом казахстанской",
+        "desc":"EPPO расследует возможное уклонение от санкций, таможенное мошенничество и НДС: происхождение товара, по версии следствия, было скрыто документами о Казахстане.",
+        "detail":"Оценка ущерба — около €206 тыс. таможенных платежей и €47 тыс. НДС. После допроса подозреваемый освобождён под финансовую гарантию; действует презумпция невиновности.",
+        "tags":["ЕС","Польша","фанера","таможня"],
+        "source":{"label":"European Public Prosecutor’s Office, 17.07.2026","url":"https://www.eppo.europa.eu/media/news/poland-eppo-carries-out-investigative-measures-customs-and-vat-fraud-probe-and-suspected-sanctions-2026-07-17_en","level":"A"},"verified":"25.11.2026"
+      }
+    ]
+  },
+  {
+    "id":"justice-jp-kr","title":"Япония и Республика Корея",
+    "subtitle":"Экспорт в Россию с ложным указанием назначения и расследования автомобильных поставок.",
+    "items":[
+      {
+        "status":"active","stage":"Уголовный приговор и административный запрет","date":"09.05.2025",
+        "title":"Япония: A-Trade и Андрей Сова наказаны за 18 нелицензированных поставок 523 товаров в Россию",
+        "desc":"METI установило ложное указание Республики Корея как страны назначения для мотоциклов, гидроциклов и иных товаров, фактически направленных в Россию.",
+        "detail":"Компания оштрафована на ¥5 млн, руководитель получил три года лишения свободы условно на четыре года. METI также запретило экспорт санкционных товаров по всем направлениям и занятие руководящей должности в экспортном бизнесе на год — с 16.05.2025 по 15.05.2026.",
+        "tags":["Япония","Россия","ложное назначение","приговор"],
+        "source":{"label":"METI, 09.05.2025","url":"https://www.meti.go.jp/press/2025/05/20250509001/20250509001.html","level":"A"},"verified":"25.11.2026"
+      },
+      {
+        "status":"pending","stage":"Выявлено таможней / расследование","date":"12.03.2026",
+        "title":"Республика Корея: таможня выявила 3 705 автомобилей, направленных в Россию через соседние страны",
+        "desc":"Korea Customs Service сообщила о машинах стоимостью 179,6 млрд вон, которые в 2023–2025 годах декларировались для Казахстана и Кыргызстана, но направлялись в Россию в обход экспортных ограничений.",
+        "detail":"Публичное сообщение подтверждает выявленную схему и усиление расследований, но не называет привлечённых лиц и не сообщает об итоговом приговоре. Карточка не утверждает виновность конкретного лица.",
+        "tags":["Корея","Россия","автомобили","таможня"],
+        "source":{"label":"Yonhap со ссылкой на Korea Customs Service, 12.03.2026","url":"https://en.yna.co.kr/view/AEN20260312002900320","level":"B"},"verified":"25.11.2026"
+      }
+    ]
+  },
+  {
+    "id":"justice-ca","title":"Канада — AML/CFT enforcement",
+    "subtitle":"Административные денежные взыскания FINTRAC по PCMLTFA.",
+    "items":[
+      {
+        "status":"active","stage":"Четыре уплаченных административных штрафа","date":"24.09.2026",
+        "title":"FINTRAC: четыре кредитных союза уплатили совокупно CAD 816 750 за AML/CFT-нарушения",
+        "desc":"Caisse populaire acadienne — CAD 676 500; Pathwise Credit Union — CAD 41 250; Your Neighbourhood Credit Union — CAD 16 500; Caisse Alliance — CAD 82 500. Все четыре дела закрыты после полной уплаты.",
+        "detail":"Это AML/CFT enforcement общего характера, а не Russia-specific санкционное дело. Карточка включена в широкий периметр раздела по прямому запросу пользователя и отделена от Russia-related дел.",
+        "tags":["Канада","FINTRAC","PCMLTFA","AML"],
+        "source":{"label":"FINTRAC — Public notice of administrative monetary penalties","url":"https://fintrac-canafe.canada.ca/pen/4-eng","level":"A"},"verified":"25.11.2026"
+      }
+    ]
+  }
+];
+
 let MAP_META = {
   "version": 5,
   "cut": "25.11.2026",
   "prev": "24.11.2026",
-  "updatedAt": "25.11.2026, 03:39 (CET, Амстердам)",
+  "updatedAt": "25.11.2026, 08:13 (CET, Амстердам)",
   "staleDays": 30,
   "release": "2.1",
   "fatcaChecked": "25.11.2026"
@@ -8329,8 +8602,9 @@ let CHANGELOG = {
   "from":"24.11.2026",
   "to":"25.11.2026",
   "items":[
+    {"group":"ENFORCEMENT","sec":"justice-us-criminal","secLabel":"Bringing to justice · США","title":"Александр Суворов признал вину в организации поставок американской электроники в Россию","status":"active","kind":"new"},
     {"group":"RUSSIAN_MEASURES","sec":"ru-response","secLabel":"Ответные меры РФ","title":"Ситибанк и «Еком Банк» исключены из перечня банков с запретом на сделки с акциями без специального разрешения","status":"active","kind":"new"},
-    {"group":"SECTIONS","sec":"eu","secLabel":"ЕС","title":"22-й пакет санкций ЕС: 25.11 проект обсуждался в Совете, но не принят и не опубликован","status":"announced","kind":"upd"},
+    {"group":"SECTIONS","sec":"eu","secLabel":"ЕС","title":"22-й пакет санкций ЕС: 25.11 проект обсуждался в Совете, но не принят и не опубликован","refTitle":"22-й пакет санкций ЕС: Еврокомиссия представила проект — около 60 банков, крипто- и платёжные сети, энергетические услуги, танкеры и теневой флот","status":"announced","kind":"upd"},
     {"group":"FATCA","sec":"fatca","secLabel":"FATCA / CRS / OFAC ORS","title":"ФНС: формат 5.07 применяется с отчётного периода 2026 года; срок подачи — 31.05.2027","status":"active","kind":"upd"}
   ]
 };
@@ -10412,7 +10686,7 @@ let EXEC_SUMMARY = {
 (function applyCutoff25112026(){
   MAP_META.cut = "25.11.2026";
   MAP_META.prev = "24.11.2026";
-  MAP_META.updatedAt = "25.11.2026, 03:39 (CET, Амстердам)";
+  MAP_META.updatedAt = "25.11.2026, 08:13 (CET, Амстердам)";
   MAP_META.fatcaChecked = "25.11.2026";
 
   COMPARISON.lastPackage.eu = "23.11.2026 — Еврокомиссия представила проект 22-го пакета. 25.11.2026 проект вынесен на презентацию и обмен мнениями в рабочем органе Совета ЕС; решения Совета и публикации в Official Journal нет. Последним вступившим в силу комплексным пакетом остаётся 21-й пакет от 23.07.2026 (A).";
@@ -10451,8 +10725,9 @@ let EXEC_SUMMARY = {
     from:"24.11.2026",
     to:"25.11.2026",
     items:[
+      {group:"ENFORCEMENT",sec:"justice-us-criminal",secLabel:"Bringing to justice · США",title:"Александр Суворов признал вину в организации поставок американской электроники в Россию",status:"active",kind:"new"},
       {group:"RUSSIAN_MEASURES",sec:"ru-response",secLabel:"Ответные меры РФ",title:"Ситибанк и «Еком Банк» исключены из перечня банков с запретом на сделки с акциями без специального разрешения",status:"active",kind:"new"},
-      {group:"SECTIONS",sec:"eu",secLabel:"ЕС",title:"22-й пакет санкций ЕС: 25.11 проект обсуждался в Совете, но не принят и не опубликован",status:"announced",kind:"upd"},
+      {group:"SECTIONS",sec:"eu",secLabel:"ЕС",title:"22-й пакет санкций ЕС: 25.11 проект обсуждался в Совете, но не принят и не опубликован",refTitle:"22-й пакет санкций ЕС: Еврокомиссия представила проект — около 60 банков, крипто- и платёжные сети, энергетические услуги, танкеры и теневой флот",status:"announced",kind:"upd"},
       {group:"FATCA",sec:"fatca",secLabel:"FATCA / CRS / OFAC ORS",title:"ФНС: формат 5.07 применяется с отчётного периода 2026 года; срок подачи — 31.05.2027",status:"active",kind:"upd"}
     ]
   };
@@ -10567,21 +10842,26 @@ function modalExtra(it){
 /* ---- «Что изменилось с прошлого среза» и «Контрольные даты» (первый экран карты) ---- */
 const CHANGE_KIND = { "new":{label:"Новое", cls:"k-new"}, "upd":{label:"Обновлено", cls:"k-upd"}, "fix":{label:"Исправлено", cls:"k-fix"} };
 function openCardByRef(group, secId, title){
-  const src = group === "SECTIONS" ? SECTIONS : group === "EXPORT_CONTROL" ? EXPORT_CONTROL : group === "RUSSIAN_MEASURES" ? RUSSIAN_MEASURES : null;
+  const src = group === "SECTIONS" ? SECTIONS : group === "EXPORT_CONTROL" ? EXPORT_CONTROL : group === "RUSSIAN_MEASURES" ? RUSSIAN_MEASURES : group === "ENFORCEMENT" ? ENFORCEMENT : group === "FATCA" ? FATCA_CARDS : null;
   if(!src) return false;
   const sec = src.find(s=>s.id === secId); if(!sec) return false;
   let idx = sec.items.findIndex(it=>it.title === title);
   if(idx < 0) idx = sec.items.findIndex(it=>it.title.indexOf(title) === 0);
   if(idx < 0) return false;
-  if(group === "SECTIONS") openModal(secId, idx); else if(group === "EXPORT_CONTROL") openExportModal(secId, idx); else openRuModal(secId, idx);
+  if(group === "SECTIONS") openModal(secId, idx);
+  else if(group === "EXPORT_CONTROL") openExportModal(secId, idx);
+  else if(group === "RUSSIAN_MEASURES") openRuModal(secId, idx);
+  else if(group === "ENFORCEMENT") openJusticeModal(secId, idx);
+  else openFatcaCardModal(secId, idx);
   return true;
 }
 function changeItemHtml(c){
   const k = CHANGE_KIND[c.kind] || CHANGE_KIND.upd;
   const note = c.note ? ` · ${sh(c.note)}` : "";
   const clickable = c.group && c.group !== "RUMORS";
+  const refTitle = c.refTitle || c.title;
   const body = clickable
-    ? `<button class="lnk" data-ref-group="${escAttr(c.group)}" data-ref-sec="${escAttr(c.sec)}" data-ref-title="${escAttr(c.title)}">${sh(c.title)}</button>`
+    ? `<button class="lnk" data-ref-group="${escAttr(c.group)}" data-ref-sec="${escAttr(c.sec)}" data-ref-title="${escAttr(refTitle)}">${sh(c.title)}</button>`
     : `<span class="lnk-static">${sh(c.title)}</span>`;
   return `<li><span class="k ${k.cls}">${k.label}</span><div><span class="sec">${sh(c.secLabel || "")}${note}</span>${body}</div></li>`;
 }
@@ -10922,7 +11202,9 @@ function render(){
    throw the count off — re-run after every render()/renderExport()/renderRu()
    since those wipe and rebuild their container's DOM nodes. */
 function applyPanelStriping(){
-  ["viewMap","viewGuide","viewExport","viewRu","viewFatca","viewRestricted"].forEach(viewId=>{
+  const countries = document.querySelectorAll("#sectionsContainer > .category");
+  countries.forEach((el,i)=>{ el.classList.toggle("panel-alt", i % 2 === 0); });
+  ["viewGuide","viewExport","viewRu","viewJustice","viewFatca","viewRestricted"].forEach(viewId=>{
     const view = document.getElementById(viewId);
     if(!view) return;
     const blocks = view.querySelectorAll(".category, .guide-section");
@@ -11058,6 +11340,63 @@ function openRuModal(secId, idx){
   document.getElementById("modalTags").innerHTML = it.tags.map(t=>`<span class="tag">${sh(t)}</span>`).join("");
   document.getElementById("modalSource").innerHTML = `<b>Дата:</b> ${sh(it.date)}<br><b>Источник:</b> ${sh(it.source.label)}<br><a href="${su(it.source.url)}" target="_blank" rel="noopener">${sh(it.source.url)}</a>${modalExtra(it)}`;
   document.getElementById("modalFootnote").textContent = "Проверьте источник по ссылке на текущую дату перед принятием комплаенс-решения — реквизиты и продления НПА РФ меняются часто.";
+  document.getElementById("overlay").classList.add("open");
+}
+
+/* ================= BRINGING TO JUSTICE + FATCA UPDATE CARDS ================= */
+let justiceQuery = "";
+function enforcementCardHtml(sec,it,idx,attr){
+  const itemDigestUrl = it.source && it.source.url ? it.source.url : "";
+  const pending = effStatus(it) === "pending";
+  return `<div class="card" data-${attr}="${escAttr(sec.id)}" data-idx="${idx}">
+    <div class="badge-row"><span class="badge ${pending?'st-pending':'st-active'}">${sh(it.stage || (pending?'Производство':'Подтверждено'))}</span></div>
+    <div class="datebar">${sh(it.date)}</div><h3>${sh(it.title)}</h3><p class="desc">${sh(it.desc)}</p>
+    <div class="tags">${it.tags.slice(0,4).map(t=>`<span class="tag">${sh(t)}</span>`).join("")}</div>
+    <div class="card-foot"><div class="card-foot-info"><span>${sh(sec.title)}</span><span>Уровень ${sh(it.source.level)}</span>${verifiedSpan(it)}</div>
+    <button class="btn-digest btn-digest-sm" data-digest-title="${escAttr(it.title)}" data-digest-url="${escAttr(itemDigestUrl)}" data-digest-content="${escAttr(formatItemForPrompt(it))}">📋 Дайджест</button></div>
+  </div>`;
+}
+function renderJustice(){
+  const container = document.getElementById("justiceContainer"); if(!container) return;
+  const q = justiceQuery.trim().toLowerCase(); let shown = 0, completed = 0, pending = 0;
+  container.innerHTML = ENFORCEMENT.map(sec=>{
+    const rows = sec.items.map((it,idx)=>({it,idx})).filter(({it})=>!q || (it.title+" "+it.desc+" "+it.detail+" "+it.tags.join(" ")+" "+sec.title).toLowerCase().includes(q));
+    if(!rows.length) return "";
+    rows.sort((a,b)=>extractSortDate(b.it.date)-extractSortDate(a.it.date));
+    shown += rows.length; rows.forEach(({it})=>{ if(effStatus(it)==="pending") pending++; else completed++; });
+    const caseWord = rows.length%10===1 && rows.length%100!==11 ? "дело" : rows.length%10>=2 && rows.length%10<=4 && !(rows.length%100>=12 && rows.length%100<=14) ? "дела" : "дел";
+    return `<section class="category"><div class="wrap"><div class="cat-head"><div><h2>${sh(sec.title)}</h2><p>${sh(sec.subtitle)}</p></div><div class="cat-count">${rows.length} ${caseWord}</div></div>${renderCardGrid(rows.map(({it,idx})=>enforcementCardHtml(sec,it,idx,"justicesec")),sec.id)}</div></section>`;
+  }).join("");
+  if(!shown) container.innerHTML = `<div class="wrap"><p class="empty-msg">По заданному запросу дел не найдено.</p></div>`;
+  const stats = document.getElementById("justiceHeroStats");
+  if(stats) stats.innerHTML = `<div><span class="num">${shown}</span><span class="lbl">карточек</span></div><div><span class="num">${completed}</span><span class="lbl">решения / признания / приговоры</span></div><div><span class="num">${pending}</span><span class="lbl">незавершённые производства</span></div>`;
+  document.querySelectorAll(".card[data-justicesec]").forEach(c=>c.addEventListener("click",e=>{ if(e.target.closest(".btn-digest")) return; openJusticeModal(c.dataset.justicesec,Number(c.dataset.idx)); }));
+  applyPanelStriping();
+}
+function openJusticeModal(secId,idx){
+  const sec = ENFORCEMENT.find(s=>s.id===secId), it = sec.items[idx];
+  document.getElementById("modalTitle").textContent = it.title;
+  document.getElementById("modalDesc").innerHTML = sh(it.detail || it.desc);
+  document.getElementById("modalBadges").innerHTML = `<span class="badge ${effStatus(it)==='pending'?'st-pending':'st-active'}">${sh(it.stage || 'Подтверждено')}</span><span class="badge lvl">${sh(sec.title)}</span><span class="badge lvl">Уровень источника: ${sh(it.source.level)}</span>`;
+  document.getElementById("modalTags").innerHTML = it.tags.map(t=>`<span class="tag">${sh(t)}</span>`).join("");
+  document.getElementById("modalSource").innerHTML = `<b>Дата:</b> ${sh(it.date)}<br><b>Источник:</b> ${sh(it.source.label)}<br><a href="${su(it.source.url)}" target="_blank" rel="noopener">${sh(it.source.url)}</a>${modalExtra(it)}`;
+  document.getElementById("modalFootnote").textContent = effStatus(it)==="pending" ? "Обвинение, арест, допрос или расследование не означают виновность. Действует презумпция невиновности до вступившего в силу решения суда." : "Проверьте первоисточник и последующие процессуальные решения на дату использования.";
+  document.getElementById("overlay").classList.add("open");
+}
+function renderFatcaCards(){
+  const container = document.getElementById("fatcaCardsContainer"); if(!container) return;
+  container.innerHTML = FATCA_CARDS.map(sec=>`<section class="category"><div class="wrap"><div class="cat-head"><div><h2>${sh(sec.title)}</h2><p>${sh(sec.subtitle)}</p></div><div class="cat-count">${sec.items.length}</div></div>${renderCardGrid(sec.items.map((it,idx)=>enforcementCardHtml(sec,it,idx,"fatcasec")),"fatca-cards")}</div></section>`).join("");
+  document.querySelectorAll(".card[data-fatcasec]").forEach(c=>c.addEventListener("click",e=>{ if(e.target.closest(".btn-digest")) return; openFatcaCardModal(c.dataset.fatcasec,Number(c.dataset.idx)); }));
+  applyPanelStriping();
+}
+function openFatcaCardModal(secId,idx){
+  const sec = FATCA_CARDS.find(s=>s.id===secId), it = sec.items[idx];
+  document.getElementById("modalTitle").textContent = it.title;
+  document.getElementById("modalDesc").innerHTML = sh(it.detail || it.desc);
+  document.getElementById("modalBadges").innerHTML = `<span class="badge st-active">Подтверждено</span><span class="badge lvl">${sh(sec.title)}</span><span class="badge lvl">Уровень источника: ${sh(it.source.level)}</span>`;
+  document.getElementById("modalTags").innerHTML = it.tags.map(t=>`<span class="tag">${sh(t)}</span>`).join("");
+  document.getElementById("modalSource").innerHTML = `<b>Дата:</b> ${sh(it.date)}<br><b>Источник:</b> ${sh(it.source.label)}<br><a href="${su(it.source.url)}" target="_blank" rel="noopener">${sh(it.source.url)}</a>${modalExtra(it)}`;
+  document.getElementById("modalFootnote").textContent = "Налоговая и санкционная отчётность — разные обязанности; перед подачей проверьте действующий формат и разъяснения регулятора.";
   document.getElementById("overlay").classList.add("open");
 }
 
@@ -11396,6 +11735,10 @@ document.getElementById("btnSearchClear").addEventListener("click", ()=>{
   activeFilters.q = "";
   render();
 });
+const justiceSearchInput = document.getElementById("justiceSearchInput");
+if(justiceSearchInput) justiceSearchInput.addEventListener("input",e=>{ justiceQuery=e.target.value; renderJustice(); });
+const btnJusticeSearchClear = document.getElementById("btnJusticeSearchClear");
+if(btnJusticeSearchClear) btnJusticeSearchClear.addEventListener("click",()=>{ justiceSearchInput.value=""; justiceQuery=""; renderJustice(); });
 
 /* ================= TABS ================= */
 let restrictedRendered = false;
@@ -11409,6 +11752,8 @@ document.querySelectorAll(".tabbtn").forEach(btn=>{
       document.getElementById("viewGuide").style.display = view==="guide" ? "" : "none";
       document.getElementById("viewExport").style.display = view==="export" ? "" : "none";
       document.getElementById("viewRu").style.display = view==="ru" ? "" : "none";
+      const vj = document.getElementById("viewJustice");
+      if(vj) vj.style.display = view==="justice" ? "" : "none";
       const vf = document.getElementById("viewFatca");
       if(vf) vf.style.display = view==="fatca" ? "" : "none";
       const vr = document.getElementById("viewRestricted");
@@ -12328,6 +12673,7 @@ document.addEventListener("contextmenu", (e)=>e.preventDefault());
     cancelAnimationFrame(pendingFrame);
     lastT = null;
     if(!document.hidden) pendingFrame = requestAnimationFrame(frame);
+    document.body.classList.toggle("ice-paused", paused);
     motionButton.textContent = paused ? "Включить анимацию" : "Пауза анимации";
   }
   motionButton.hidden = false;
@@ -12365,6 +12711,8 @@ buildChips();
 render();
 renderExport();
 renderRu();
+renderJustice();
+renderFatcaCards();
 renderComparisonTable();
 renderOfficerConclusion();
 renderBrief();
@@ -12374,7 +12722,7 @@ renderSourceRegistry();
    браузер не должен подставлять прежний ввод (автозаполнение/восстановление формы). */
 (function(){
   function clearSearch(){
-    ["searchInput","restrictedSearchInput"].forEach(id=>{ const el = document.getElementById(id); if(el && el.value){ el.value = ""; el.dispatchEvent(new Event("input")); } });
+    ["searchInput","justiceSearchInput","restrictedSearchInput"].forEach(id=>{ const el = document.getElementById(id); if(el && el.value){ el.value = ""; el.dispatchEvent(new Event("input")); } });
   }
   clearSearch();
   window.addEventListener("pageshow", clearSearch);
