@@ -694,7 +694,14 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
   .tabmenu-btn,.btn,.btn-ink {border-radius:6px;}
   .tabmenu-btn {border-color:#63819a; padding:7px 11px;}
   .badge-live {color:#deeff8; border-color:#51728b; font-variant-numeric:tabular-nums;}
-  .badge-live .dotpulse {background:#9cdeff; animation:none;}
+  .badge-live .dotpulse {background:#20dc86; box-shadow:0 0 0 0 rgba(32,220,134,.58); animation:data-heartbeat 1.15s ease-in-out infinite; transform-origin:center;}
+  @keyframes data-heartbeat {
+    0%,44%,100% {transform:scale(1);box-shadow:0 0 0 0 rgba(32,220,134,.50);opacity:.88;}
+    9% {transform:scale(1.62);box-shadow:0 0 0 5px rgba(32,220,134,.08);opacity:1;}
+    17% {transform:scale(.92);box-shadow:0 0 0 0 rgba(32,220,134,0);opacity:.82;}
+    27% {transform:scale(1.42);box-shadow:0 0 0 4px rgba(32,220,134,.10);opacity:1;}
+    36% {transform:scale(1);box-shadow:0 0 0 0 rgba(32,220,134,0);opacity:.88;}
+  }
   .hero {padding:clamp(48px,6vw,92px) 0 clamp(35px,4.1vw,64px);}
   .hero::after {background:linear-gradient(90deg,rgba(3,21,42,.94) 0%,rgba(4,24,47,.91) 25%,rgba(6,32,53,.75) 48%,rgba(9,41,65,.25) 70%,transparent 100%);}
   .hero .inner {max-width:min(740px,70%);}
@@ -730,6 +737,28 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
   .brief-grid .prose {border-top:3px solid #4d9fc9;}
   .tag,.k-new,.badge.st-announced {color:#115b84; background:#e8f4fc; border-color:#c8dfec;}
   .btn-digest,.more-toggle summary {background:#fff;}
+  #briefSection .brief-grid {grid-template-columns:1fr;gap:18px;}
+  #briefSection .brief-col:first-child {background:rgba(218,238,241,.82);border:1px solid rgba(255,255,255,.42);border-top:0;box-shadow:none;padding:24px 28px 26px;backdrop-filter:blur(2px);}
+  #briefSection .brief-col:first-child h3 {color:#009da2;font-size:21px;line-height:1.18;margin-bottom:12px;letter-spacing:.01em;}
+  #briefSection .brief-col:first-child .brief-sub {color:#768399;font-size:13px;margin:0 0 7px;}
+  #briefSection .brief-col:first-child .brief-list {gap:0;}
+  #briefSection .brief-col:first-child .brief-list li {grid-template-columns:100px 1fr;gap:14px;padding:13px 0;border-bottom:1px dashed rgba(255,255,255,.78);font-size:14px;line-height:1.45;}
+  #briefSection .brief-col:first-child .brief-list .k {min-width:100px;padding:4px 9px;background:#f7ffff;}
+  #briefSection .brief-col:first-child .brief-list .k-upd {background:#f1f6ff;color:#2f6fed;border-color:#d5e2ff;}
+  #briefSection .brief-col:first-child .brief-list .sec {color:#778299;font-size:11.5px;margin-bottom:3px;}
+  #briefSection .brief-col:first-child button.lnk,#briefSection .brief-col:first-child .lnk-static {color:#101827;font-size:14.5px;font-weight:750;line-height:1.43;}
+  #briefSection .brief-col:first-child button.lnk:hover {color:#007f84;}
+  .changelog-previous {margin-top:18px;padding-top:14px;border-top:1px solid var(--border);}
+  .changelog-previous > summary {cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#009da2;font-weight:850;font-size:15px;}
+  .changelog-previous > summary::-webkit-details-marker {display:none;}
+  .changelog-previous > summary::after {content:"▾";color:var(--petrol);transition:transform .18s;}
+  .changelog-previous[open] > summary::after {transform:rotate(180deg);}
+  .changelog-previous .brief-sub {margin-top:8px;}
+  @media(max-width:620px){
+    #briefSection .brief-col:first-child {padding:20px 16px 22px;}
+    #briefSection .brief-col:first-child .brief-list li {grid-template-columns:1fr;gap:6px;}
+    #briefSection .brief-col:first-child .brief-list .k {min-width:0;width:max-content;}
+  }
   .filterbar {background:#fff; border-color:#acc9db;}
   .srctable,.compare-table,.deadline-list li {background:#fff;}
   .infosec-card {background:#fff; color:var(--ink); border:1px solid #c7dbe6; box-shadow:0 5px 16px rgba(16,46,72,.14);}
@@ -762,6 +791,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
     html {scroll-behavior:auto;}
     *,*::before,*::after {animation-duration:.01ms!important; transition-duration:.01ms!important;}
     body::before,body::after {animation:none!important;}
+    .badge-live .dotpulse {animation:none!important;}
   }
 }
 @media print {#waterBG,#iceFX,body::before,body::after {display:none!important;}}
@@ -832,6 +862,11 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
         <details class="more-toggle" id="changelogMore" style="display:none;">
           <summary>Показать ещё</summary>
           <ul class="brief-list" id="changelogRest"></ul>
+        </details>
+        <details class="changelog-previous" id="changelogPrevious" open>
+          <summary>Предыдущая редакция изменений</summary>
+          <p class="brief-sub" id="changelogPreviousSub"></p>
+          <ul class="brief-list" id="changelogPreviousList"></ul>
         </details>
       </div>
       <div class="prose brief-col">
@@ -8610,6 +8645,18 @@ let CHANGELOG = {
     {"group":"SECTIONS","sec":"g7","secLabel":"G7 / REPO · ЕС","title":"Ukraine Support Loan: Совет утвердил распределение до €45 млрд на 2027 год","refTitle":"«Ukraine Support Loan» ЕС — заём на репарационной основе (не прямое изъятие активов ЦБ РФ)","status":"active","kind":"upd"}
   ]
 };
+/* Предыдущий changelog сохраняется отдельно: при следующем содержательном
+   обновлении текущий CHANGELOG переносится сюда до формирования нового. */
+let CHANGELOG_PREVIOUS = {
+  "from":"24.11.2026",
+  "to":"25.11.2026",
+  "items":[
+    {"group":"ENFORCEMENT","sec":"justice-us-criminal","secLabel":"Bringing to justice · США","title":"Александр Суворов признал вину в организации поставок американской электроники в Россию","status":"active","kind":"new"},
+    {"group":"RUSSIAN_MEASURES","sec":"ru-response","secLabel":"Ответные меры РФ","title":"Ситибанк и «Еком Банк» исключены из перечня банков с запретом на сделки с акциями без специального разрешения","status":"active","kind":"new"},
+    {"group":"SECTIONS","sec":"eu","secLabel":"ЕС","title":"22-й пакет санкций ЕС: 25.11 проект обсуждался в Совете, но не принят и не опубликован","refTitle":"22-й пакет санкций ЕС: Еврокомиссия представила проект — около 60 банков, крипто- и платёжные сети, энергетические услуги, танкеры и теневой флот","status":"announced","kind":"upd"},
+    {"group":"FATCA","sec":"fatca","secLabel":"FATCA / CRS / OFAC ORS","title":"ФНС: формат 5.07 применяется с отчётного периода 2026 года; срок подачи — 31.05.2027","status":"active","kind":"upd"}
+  ]
+};
 let DEADLINES = {
   "items": [
     {
@@ -10970,6 +11017,23 @@ function renderBrief(){
       const sum = more.querySelector("summary"); if(sum) sum.textContent = "Показать ещё " + (items.length - HEAD);
     }
   }
+  const previousBox = document.getElementById("changelogPrevious");
+  const previousList = document.getElementById("changelogPreviousList");
+  const previousSub = document.getElementById("changelogPreviousSub");
+  if(previousBox && previousList){
+    const previous = typeof CHANGELOG_PREVIOUS !== "undefined" ? CHANGELOG_PREVIOUS : null;
+    const previousItems = previous && Array.isArray(previous.items) ? previous.items : [];
+    previousBox.style.display = previous ? "" : "none";
+    if(previous){
+      const nNew = previousItems.filter(c=>c.kind === "new").length;
+      const nUpd = previousItems.filter(c=>c.kind === "upd").length;
+      const nFix = previousItems.filter(c=>c.kind === "fix").length;
+      if(previousSub) previousSub.textContent = previousItems.length
+        ? `Срез ${previous.from || "—"} → ${previous.to || "—"}. Новых карточек: ${nNew} · обновлено: ${nUpd}${nFix ? " · исправлено: " + nFix : ""}.`
+        : `Срез ${previous.from || "—"} → ${previous.to || "—"}: изменений не было.`;
+      previousList.innerHTML = previousItems.map(changeItemHtml).join("");
+    }
+  }
   const dl = document.getElementById("deadlineList");
   if(dl){
     const rows = deadlineRows(0, true);
@@ -12429,6 +12493,120 @@ document.getElementById("btnPrint2").addEventListener("click", ()=>window.print(
    а не технический факт (см. HTML-комментарий в начале файла и мета-теги
    author/copyright/robots). */
 document.addEventListener("contextmenu", (e)=>e.preventDefault());
+
+/* ================= BAYKAL ICE — WEBGL BACKGROUND =================
+   Adapted for Map 2.1 from the user-provided WebGL reference. The reference
+   is treated as a visual/technical sample only. Motion is tied to the map's
+   single pause control and respects prefers-reduced-motion. */
+(function(){
+  const canvas=document.getElementById("iceFX");
+  if(!canvas) return;
+  /* Compile the reference shader only on a hardware renderer. SwiftShader and
+     other software implementations can block page startup while compiling;
+     returning here deliberately hands the same canvas to the tested 2D living
+     ice fallback below, so animation is never traded for UI responsiveness. */
+  const probe=document.createElement("canvas");
+  const probeGL=probe.getContext("webgl",{antialias:false,powerPreference:"low-power"});
+  if(!probeGL) return;
+  const debugInfo=probeGL.getExtension("WEBGL_debug_renderer_info");
+  const renderer=debugInfo ? String(probeGL.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)||"") : "";
+  if(/swiftshader|software|llvmpipe/i.test(renderer)) return;
+  const gl=canvas.getContext("webgl",{antialias:false,alpha:false,powerPreference:"low-power",preserveDrawingBuffer:false});
+  if(!gl){ canvas.style.display="none"; return; }
+
+  const VS="attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
+  const FS=`
+precision highp float;
+uniform vec2 uRes;
+uniform float uPh;
+#define TAU 6.2831853
+vec2 hash2(vec2 p){p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)));return fract(sin(p)*43758.5453);}
+float hash1(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);return mix(mix(hash1(i),hash1(i+vec2(1.,0.)),u.x),mix(hash1(i+vec2(0.,1.)),hash1(i+vec2(1.,1.)),u.x),u.y);}
+float fbm(vec2 p){float s=0.,a=.5;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<3;i++){s+=a*noise(p);p=m*p;a*=.5;}return s;}
+vec3 crackLayer(vec2 p,float S,float seed,float w,float pix,float sheetK){
+  vec3 acc=vec3(0.);
+  for(int k=0;k<5;k++){
+    float fk=float(k),th=TAU*hash1(vec2(seed*1.31,fk*1.7+.3));
+    vec2 dir=vec2(cos(th),sin(th));
+    vec2 r=vec2(dot(p,dir),dot(p,vec2(-dir.y,dir.x)));
+    r.y+=(noise(vec2(r.x*.5/S,fk*3.+seed))-.5)*.10*S+(noise(vec2(r.x*9./S,fk+seed*2.))-.5)*.012*S;
+    float sp=S*(.8+.7*hash1(vec2(fk,seed+3.))),id=floor(r.y/sp),hy=hash1(vec2(id,fk+seed*5.));
+    float sd=r.y-(id+.30+.40*hy)*sp,d=abs(sd);
+    float g=smoothstep(.42,.58,noise(vec2(r.x*.30/S+hy*40.,id*3.1+fk)))*step(.30,hash1(vec2(id*1.3,fk*2.1+seed)));
+    float wv=max(w*(.35+1.4*noise(vec2(r.x*2.5/S,id+fk))),pix);
+    float core=(1.-smoothstep(0.,wv,d))*(.35+.85*noise(vec2(r.x*1.6/S,id*2.+fk)));
+    float glow=exp(-d/(wv*6.)),side=hash1(vec2(id,fk*9.+seed))>.5?1.:-1.;
+    float sw=sp*(.015+.055*hash1(vec2(id*7.,fk+seed)))*sheetK;
+    float tex=.25+.55*noise(vec2(r.x*9./S,d*25./S+id*5.))+.55*noise(vec2(r.x*45./S+id,d*3./S));
+    float sh=step(0.,sd*side)*exp(-d/sw)*tex*step(.35,hash1(vec2(id*2.7,fk+seed*2.)));
+    acc+=vec3(core,glow,sh)*g;
+  }
+  return acc;
+}
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*uRes)/uRes.y;
+  float ph=uPh,pix=1.5/uRes.y;
+  vec2 drift=32.*vec2(cos(ph),sin(ph));
+  float a=.035*sin(ph*3.);
+  uv=mat2(cos(a),-sin(a),sin(a),cos(a))*uv;
+  float b=fbm(uv*1.4+drift*.3+3.*vec2(cos(ph*4.),sin(ph*4.)));
+  vec3 col=mix(vec3(.004,.080,.160),vec3(.040,.330,.430),smoothstep(.15,.90,b));
+  float c=fbm(uv*3.2+drift*.6+6.*vec2(cos(ph*9.),sin(ph*7.)));
+  col+=vec3(.015,.070,.080)*smoothstep(.45,.9,c);
+  vec3 L,ice=vec3(.84,.97,1.);
+  L=crackLayer(uv+drift*.40,1.10,1.0,.010,pix,1.6);col=mix(col,vec3(.30,.58,.66),clamp(L.z*.35,0.,1.));col+=vec3(.16,.38,.44)*(L.y*.20+L.x*.35);
+  L=crackLayer(uv+drift*.68,.80,7.0,.008,pix,2.2);col=mix(col,vec3(.62,.84,.88),clamp(L.z*.45,0.,1.));col+=vec3(.45,.72,.78)*(L.y*.22+L.x*.55);
+  L=crackLayer(uv+drift,.55,13.0,.0055,pix,2.6);col=mix(col,ice,clamp(L.z*.55,0.,1.));col+=ice*(L.y*.25+L.x*.85);
+  L=crackLayer(uv+drift,.30,21.0,.0016,pix,.8);col+=ice*(L.x*.10+L.y*.03);
+  vec2 sp=(uv+drift)*95.,si=floor(sp),sf=fract(sp)-.5;float h=hash1(si);
+  float st=step(.986,h)*smoothstep(.13,0.,length(sf-(hash2(si)-.5)*.6));st*=.45+.55*sin(ph*420.+h*60.);col+=max(st,0.)*.55;
+  float sweep=fract(ph*12./TAU),band=dot(uv,normalize(vec2(1.,.45)))-mix(-2.2,2.2,sweep);col*=1.+.12*exp(-band*band*1.8);
+  vec2 vv=gl_FragCoord.xy/uRes-.5;col*=1.-.55*dot(vv,vv);col=1.-exp(-col*1.45);gl_FragColor=vec4(col,1.);
+}`;
+
+  function compile(type,source){
+    const shader=gl.createShader(type);gl.shaderSource(shader,source);gl.compileShader(shader);
+    if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){console.error("Ice shader:",gl.getShaderInfoLog(shader));return null;}
+    return shader;
+  }
+  const vertex=compile(gl.VERTEX_SHADER,VS),fragment=compile(gl.FRAGMENT_SHADER,FS);
+  if(!vertex||!fragment){canvas.style.display="none";return;}
+  const program=gl.createProgram();gl.attachShader(program,vertex);gl.attachShader(program,fragment);gl.linkProgram(program);
+  if(!gl.getProgramParameter(program,gl.LINK_STATUS)){console.error("Ice program:",gl.getProgramInfoLog(program));canvas.style.display="none";return;}
+  gl.useProgram(program);
+  const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const position=gl.getAttribLocation(program,"p");gl.enableVertexAttribArray(position);gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
+  const uRes=gl.getUniformLocation(program,"uRes"),uPh=gl.getUniformLocation(program,"uPh");
+  const reduced=window.matchMedia("(prefers-reduced-motion: reduce)");
+  let phase=Math.random()*Math.PI*2,last=performance.now(),lastDraw=0,pending=0;
+  let paused=!!window.__cmMotionPaused||reduced.matches;
+
+  function resize(){
+    /* Half-resolution shader is intentionally scaled by CSS: the procedural
+       lines stay crisp while the UI thread remains responsive on laptops. */
+    const scale=Math.min(window.devicePixelRatio||1,2)*.42;
+    const w=Math.max(1,Math.round(innerWidth*scale)),h=Math.max(1,Math.round(innerHeight*scale));
+    if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}
+    gl.uniform2f(uRes,w,h);
+  }
+  function render(){gl.uniform1f(uPh,phase);gl.drawArrays(gl.TRIANGLES,0,3);}
+  function frame(now){
+    pending=0;
+    if(now-lastDraw>=40){const dt=Math.min((now-last)/1000,.25);last=now;lastDraw=now;phase=(phase+dt*.024)%(Math.PI*2);render();}
+    if(!paused&&!document.hidden) pending=requestAnimationFrame(frame);
+  }
+  function sync(){
+    cancelAnimationFrame(pending);pending=0;last=performance.now();resize();render();
+    if(!paused&&!document.hidden) pending=requestAnimationFrame(frame);
+  }
+  function setPaused(value){paused=!!value;sync();}
+  window.addEventListener("cm:motion",event=>setPaused(event.detail&&event.detail.paused));
+  window.addEventListener("resize",sync,{passive:true});
+  document.addEventListener("visibilitychange",sync);
+  reduced.addEventListener("change",event=>setPaused(event.matches));
+  resize();render();sync();
+})();
 
 /* ================= LIVING ICE PLATES =================
    A dedicated canvas moves independent, shared-edge ice plates. Their gaps
