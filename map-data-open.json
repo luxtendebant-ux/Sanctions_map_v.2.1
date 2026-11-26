@@ -1,14 +1,14 @@
 {
  "schema": "compliance-map-open/1",
- "generated": "2026-11-25T07:13:59Z",
+ "generated": "2026-11-26T01:49:43Z",
  "meta": {
   "version": 5,
-  "cut": "25.11.2026",
-  "prev": "24.11.2026",
-  "updatedAt": "25.11.2026, 08:13 (CET, Амстердам)",
+  "cut": "26.11.2026",
+  "prev": "25.11.2026",
+  "updatedAt": "26.11.2026, 02:41 (CET, Амстердам)",
   "staleDays": 30,
   "release": "2.1",
-  "fatcaChecked": "25.11.2026"
+  "fatcaChecked": "26.11.2026"
  },
  "sections": [
   {
@@ -5517,42 +5517,18 @@
     "title": "FATCA / CRS / OFAC ORS: российские банки ТОП-20"
    }
   ],
-  "checked": "25.11.2026"
+  "checked": "26.11.2026"
  },
  "changelog": {
-  "from": "24.11.2026",
-  "to": "25.11.2026",
+  "from": "25.11.2026",
+  "to": "26.11.2026",
   "items": [
    {
-    "group": "ENFORCEMENT",
-    "sec": "justice-us-criminal",
-    "secLabel": "Bringing to justice · США",
-    "title": "Александр Суворов признал вину в организации поставок американской электроники в Россию",
-    "status": "active",
-    "kind": "new"
-   },
-   {
-    "group": "RUSSIAN_MEASURES",
-    "sec": "ru-response",
-    "secLabel": "Ответные меры РФ",
-    "title": "Ситибанк и «Еком Банк» исключены из перечня банков с запретом на сделки с акциями без специального разрешения",
-    "status": "active",
-    "kind": "new"
-   },
-   {
     "group": "SECTIONS",
-    "sec": "eu",
-    "secLabel": "ЕС",
-    "title": "22-й пакет санкций ЕС: 25.11 проект обсуждался в Совете, но не принят и не опубликован",
-    "refTitle": "22-й пакет санкций ЕС: Еврокомиссия представила проект — около 60 банков, крипто- и платёжные сети, энергетические услуги, танкеры и теневой флот",
-    "status": "announced",
-    "kind": "upd"
-   },
-   {
-    "group": "FATCA",
-    "sec": "fatca",
-    "secLabel": "FATCA / CRS / OFAC ORS",
-    "title": "ФНС: формат 5.07 применяется с отчётного периода 2026 года; срок подачи — 31.05.2027",
+    "sec": "g7",
+    "secLabel": "G7 / REPO · ЕС",
+    "title": "Ukraine Support Loan: Совет утвердил распределение до €45 млрд на 2027 год",
+    "refTitle": "«Ukraine Support Loan» ЕС — заём на репарационной основе (не прямое изъятие активов ЦБ РФ)",
     "status": "active",
     "kind": "upd"
    }
@@ -5594,8 +5570,69 @@
   ]
  },
  "sourceRegistry": {
-  "checked": "25.11.2026",
+  "checked": "26.11.2026",
   "groups": [
+   {
+    "section": "Срез 26.11.2026",
+    "items": [
+     {
+      "name": "EUR-Lex — Council Implementing Decision (EU) 2026/2623",
+      "url": "https://eur-lex.europa.eu/eli/dec_impl/2026/2623/oj",
+      "level": "A",
+      "checked": "26.11.2026",
+      "result": "ok",
+      "note": "На 2027 год одобрено до €45 млрд: до €13,3 млрд бюджетной и до €31,7 млрд оборонной поддержки Украины."
+     },
+     {
+      "name": "OFAC — Recent Actions и Russia program",
+      "url": "https://ofac.treasury.gov/recent-actions",
+      "level": "A",
+      "checked": "26.11.2026",
+      "result": "ok",
+      "note": "После GL 131L от 19.11 новых Russia-related действий по 26.11 не опубликовано."
+     },
+     {
+      "name": "FCDO — Russia designations; OFSI — General Licences и FAQ",
+      "url": "https://www.gov.uk/guidance/russia-list-of-designations-and-sanctions-notices",
+      "level": "A",
+      "checked": "26.11.2026",
+      "result": "ok",
+      "note": "Последнее Russia notice — 20.11; новые FAQ OFSI от 24.11 не меняют Russia-related карточки карты."
+     },
+     {
+      "name": "Официальные ленты Канады, Швейцарии, Австралии, Японии и Новой Зеландии",
+      "url": "https://www.international.gc.ca/world-monde/international_relations-relations_internationales/sanctions/russia-russie.aspx",
+      "level": "A",
+      "checked": "26.11.2026",
+      "result": "ok",
+      "note": "Новых мер против России после среза 25.11 не выявлено."
+     },
+     {
+      "name": "Официальное опубликование РФ, Правительство РФ, Минэкономразвития и ЕЭК",
+      "url": "https://publication.pravo.gov.ru/",
+      "level": "A",
+      "checked": "26.11.2026",
+      "result": "ok",
+      "note": "Новых релевантных актов по ответным мерам и ограничениям вывоза после среза 25.11 не выявлено; действующий реестр ограничений сохранён."
+     },
+     {
+      "name": "DOJ, BIS, FinCEN и OFSI enforcement",
+      "url": "https://www.justice.gov/news",
+      "level": "A",
+      "checked": "26.11.2026",
+      "result": "ok",
+      "note": "Новых подтверждённых дел в периметре Bringing to justice после среза 25.11 не выявлено."
+     },
+     {
+      "name": "IRS FATCA alerts и ФНС России",
+      "url": "https://www.irs.gov/businesses/corporations/fatca-current-alerts-and-other-news",
+      "level": "A",
+      "checked": "26.11.2026",
+      "result": "ok",
+      "note": "Изменений, требующих обновления FATCA/CRS/ORS после среза 25.11, не выявлено."
+     }
+    ]
+   },
    {
     "section": "Срез 25.11.2026",
     "items": [
