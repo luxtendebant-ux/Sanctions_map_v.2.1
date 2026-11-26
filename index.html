@@ -674,15 +674,19 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
   }
   html {background:#2c7898;}
   body {background:transparent; isolation:isolate;}
-  #waterBG {background-color:#2b7898; background-image:radial-gradient(ellipse at 72% 24%,rgba(137,220,239,.76),rgba(24,91,119,.80) 72%);}
-  /* The photographic ice covers the whole workspace, not only the hero. The
-     second copy restores darker fissure detail after the light screen layer. */
-  body::before {content:""; position:fixed; inset:-4%; z-index:-1; pointer-events:none; background-image:linear-gradient(rgba(164,231,244,.18),rgba(35,117,145,.12)),var(--ice-photo,none); background-size:cover; background-position:50% 48%; opacity:.68; mix-blend-mode:screen; filter:saturate(.82) brightness(1.12) contrast(1.32); transform-origin:50% 50%; animation:ice-sheet-drift 26s ease-in-out infinite alternate; will-change:transform,background-position;}
-  body::after {content:""; position:fixed; inset:-5%; z-index:-1; pointer-events:none; background-image:var(--ice-photo,none); background-size:cover; background-position:50% 48%; opacity:.24; mix-blend-mode:multiply; filter:grayscale(.45) brightness(1.16) contrast(1.78); transform-origin:52% 47%; animation:ice-crack-drift 18s ease-in-out infinite alternate; will-change:transform,background-position,opacity;}
-  @keyframes ice-sheet-drift {0%{transform:scale(1.035) translate3d(-.8%,-.45%,0);background-position:48.8% 47.2%;}50%{transform:scale(1.055) rotate(.18deg) translate3d(.3%,.7%,0);background-position:50.6% 49%;}100%{transform:scale(1.04) rotate(-.12deg) translate3d(.9%,-.15%,0);background-position:51.4% 47.8%;}}
-  @keyframes ice-crack-drift {0%{transform:scale(1.04) translate3d(.55%,-.35%,0);background-position:50.8% 47.5%;opacity:.21;}48%{transform:scale(1.065) rotate(-.22deg) translate3d(-.5%,.55%,0);background-position:49.1% 49.1%;opacity:.28;}100%{transform:scale(1.045) rotate(.16deg) translate3d(-.85%,-.2%,0);background-position:48.4% 48%;opacity:.23;}}
+  #waterBG {background:transparent;}
+  /* A crisp, still photographic bed sits below the procedural ice plates. The
+     canvases move actual plate geometry; these pseudo-elements only breathe
+     light, so the texture never turns into a translated, blurred smear. */
+  body::before {content:""; position:fixed; inset:0; z-index:-3; pointer-events:none; background-image:linear-gradient(rgba(161,228,242,.12),rgba(31,111,142,.18)),var(--ice-photo,none); background-size:cover; background-position:50% 48%; opacity:.58; animation:ice-sheet-light 18s ease-in-out infinite alternate;}
+  body::after {content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(ellipse at 25% 18%,rgba(225,250,255,.22),transparent 42%),linear-gradient(115deg,transparent 22%,rgba(198,241,251,.10) 48%,transparent 72%); opacity:.11; animation:ice-crack-light 12s ease-in-out infinite alternate;}
+  @keyframes ice-sheet-light {from{opacity:.54;}to{opacity:.62;}}
+  @keyframes ice-crack-light {0%{opacity:.07;}48%{opacity:.15;}100%{opacity:.09;}}
   body.ice-paused::before,body.ice-paused::after {animation-play-state:paused;}
-  #waterBG {z-index:-2;}
+  /* Transparent fauna/wave canvas is above the ice, making the complete fish
+     animation visible without covering the moving plate texture. */
+  #waterBG {z-index:-1;}
+  #iceFX {position:fixed;inset:0;width:100vw;height:100vh;z-index:-2;display:block;pointer-events:none;}
   header.top {background:#081e34f7; border-bottom:1px solid #7995af59; backdrop-filter:blur(10px);}
   header.top .bar {padding-block:10px;}
   header.top.tabs-menu #viewTabs {background:#102d46; border-color:#4e6d85; border-radius:8px; max-height:70vh; max-height:70dvh; overflow-y:auto;}
@@ -760,7 +764,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
     body::before,body::after {animation:none!important;}
   }
 }
-@media print {#waterBG,body::before,body::after {display:none!important;}}
+@media print {#waterBG,#iceFX,body::before,body::after {display:none!important;}}
 @media (max-width:600px) {
   .cat-head-right {min-width:0;max-width:100%;}
   .cat-head-right .btn-ink {max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:break-word;}
@@ -771,6 +775,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
 </head>
 <body>
 <canvas id="waterBG" aria-hidden="true"></canvas>
+<canvas id="iceFX" aria-hidden="true"></canvas>
 
 <header class="top">
   <div class="bar">
@@ -6666,12 +6671,12 @@ let ENFORCEMENT = [
 
 let MAP_META = {
   "version": 5,
-  "cut": "25.11.2026",
-  "prev": "24.11.2026",
-  "updatedAt": "25.11.2026, 08:13 (CET, Амстердам)",
+  "cut": "26.11.2026",
+  "prev": "25.11.2026",
+  "updatedAt": "26.11.2026, 02:41 (CET, Амстердам)",
   "staleDays": 30,
   "release": "2.1",
-  "fatcaChecked": "25.11.2026"
+  "fatcaChecked": "26.11.2026"
 };
 OFFICER_CONCLUSION.text = OFFICER_CONCLUSION.text.replace("09:46 (UTC+8, Иркутск)", "09:53 (UTC+8, Иркутск)");
 let CARD_ARCHIVE = [
@@ -8599,13 +8604,10 @@ let CHANGELOG_ARCHIVE_SEED = {
   ]
 };
 let CHANGELOG = {
-  "from":"24.11.2026",
-  "to":"25.11.2026",
+  "from":"25.11.2026",
+  "to":"26.11.2026",
   "items":[
-    {"group":"ENFORCEMENT","sec":"justice-us-criminal","secLabel":"Bringing to justice · США","title":"Александр Суворов признал вину в организации поставок американской электроники в Россию","status":"active","kind":"new"},
-    {"group":"RUSSIAN_MEASURES","sec":"ru-response","secLabel":"Ответные меры РФ","title":"Ситибанк и «Еком Банк» исключены из перечня банков с запретом на сделки с акциями без специального разрешения","status":"active","kind":"new"},
-    {"group":"SECTIONS","sec":"eu","secLabel":"ЕС","title":"22-й пакет санкций ЕС: 25.11 проект обсуждался в Совете, но не принят и не опубликован","refTitle":"22-й пакет санкций ЕС: Еврокомиссия представила проект — около 60 банков, крипто- и платёжные сети, энергетические услуги, танкеры и теневой флот","status":"announced","kind":"upd"},
-    {"group":"FATCA","sec":"fatca","secLabel":"FATCA / CRS / OFAC ORS","title":"ФНС: формат 5.07 применяется с отчётного периода 2026 года; срок подачи — 31.05.2027","status":"active","kind":"upd"}
+    {"group":"SECTIONS","sec":"g7","secLabel":"G7 / REPO · ЕС","title":"Ukraine Support Loan: Совет утвердил распределение до €45 млрд на 2027 год","refTitle":"«Ukraine Support Loan» ЕС — заём на репарационной основе (не прямое изъятие активов ЦБ РФ)","status":"active","kind":"upd"}
   ]
 };
 let DEADLINES = {
@@ -8928,11 +8930,23 @@ let DEADLINES = {
       "title": "FATCA / CRS / OFAC ORS: российские банки ТОП-20"
     }
   ],
-  "checked": "25.11.2026"
+  "checked": "26.11.2026"
 };
 let SOURCE_REGISTRY = {
-  "checked": "25.11.2026",
+  "checked": "26.11.2026",
   "groups": [
+    {
+      "section": "Срез 26.11.2026",
+      "items": [
+        {"name":"EUR-Lex — Council Implementing Decision (EU) 2026/2623","url":"https://eur-lex.europa.eu/eli/dec_impl/2026/2623/oj","level":"A","checked":"26.11.2026","result":"ok","note":"На 2027 год одобрено до €45 млрд: до €13,3 млрд бюджетной и до €31,7 млрд оборонной поддержки Украины."},
+        {"name":"OFAC — Recent Actions и Russia program","url":"https://ofac.treasury.gov/recent-actions","level":"A","checked":"26.11.2026","result":"ok","note":"После GL 131L от 19.11 новых Russia-related действий по 26.11 не опубликовано."},
+        {"name":"FCDO — Russia designations; OFSI — General Licences и FAQ","url":"https://www.gov.uk/guidance/russia-list-of-designations-and-sanctions-notices","level":"A","checked":"26.11.2026","result":"ok","note":"Последнее Russia notice — 20.11; новые FAQ OFSI от 24.11 не меняют Russia-related карточки карты."},
+        {"name":"Официальные ленты Канады, Швейцарии, Австралии, Японии и Новой Зеландии","url":"https://www.international.gc.ca/world-monde/international_relations-relations_internationales/sanctions/russia-russie.aspx","level":"A","checked":"26.11.2026","result":"ok","note":"Новых мер против России после среза 25.11 не выявлено."},
+        {"name":"Официальное опубликование РФ, Правительство РФ, Минэкономразвития и ЕЭК","url":"https://publication.pravo.gov.ru/","level":"A","checked":"26.11.2026","result":"ok","note":"Новых релевантных актов по ответным мерам и ограничениям вывоза после среза 25.11 не выявлено; действующий реестр ограничений сохранён."},
+        {"name":"DOJ, BIS, FinCEN и OFSI enforcement","url":"https://www.justice.gov/news","level":"A","checked":"26.11.2026","result":"ok","note":"Новых подтверждённых дел в периметре Bringing to justice после среза 25.11 не выявлено."},
+        {"name":"IRS FATCA alerts и ФНС России","url":"https://www.irs.gov/businesses/corporations/fatca-current-alerts-and-other-news","level":"A","checked":"26.11.2026","result":"ok","note":"Изменений, требующих обновления FATCA/CRS/ORS после среза 25.11, не выявлено."}
+      ]
+    },
     {
       "section": "Срез 25.11.2026",
       "items": [
@@ -10780,6 +10794,66 @@ let EXEC_SUMMARY = {
   };
 })();
 
+/* Полный пробный прогон 26.11.2026: все открытые и закрытые разделы. */
+(function applyCutoff26112026(){
+  const priorConclusion = {
+    date:"25.11.2026",
+    text:OFFICER_CONCLUSION.text,
+    footnote:OFFICER_CONCLUSION.footnote
+  };
+  MAP_META.cut = "26.11.2026";
+  MAP_META.prev = "25.11.2026";
+  MAP_META.updatedAt = "26.11.2026, 02:41 (CET, Амстердам)";
+  MAP_META.fatcaChecked = "26.11.2026";
+
+  const g726 = SECTIONS.find(s=>s.id === "g7");
+  const loan26 = g726 && g726.items.find(i=>i.title === "«Ukraine Support Loan» ЕС — заём на репарационной основе (не прямое изъятие активов ЦБ РФ)");
+  if(loan26){
+    loan26.date = "Regulation (EU) 2026/467; Council Implementing Decision (EU) 2026/2623 от 23.11.2026, опубликовано 25.11.2026";
+    loan26.desc = "Совет утвердил распределение на 2027 год до €45 млрд по действующему Ukraine Support Loan: до €13,3 млрд бюджетной поддержки и до €31,7 млрд оборонной поддержки; погашение займа связано с будущими репарациями РФ.";
+    loan26.detail += "\n\nОБНОВЛЕНИЕ 26.11.2026: Council Implementing Decision (EU) 2026/2623 от 23.11.2026 одобрило Financing Strategy Украины на 2027 год и сделало доступными до €45 млрд: до €13,3 млрд бюджетной поддержки (по €6,65 млрд через Ukraine Facility и macro-financial assistance) и до €31,7 млрд оборонной поддержки. Решение опубликовано в Official Journal 25.11.2026. Это реализация уже принятого Regulation (EU) 2026/467, а не новый санкционный пакет и не конфискация активов ЦБ РФ.";
+    loan26.source = {label:"EUR-Lex — Council Implementing Decision (EU) 2026/2623 от 23.11.2026 (A)",url:"https://eur-lex.europa.eu/eli/dec_impl/2026/2623/oj",level:"A"};
+    loan26.verified = "26.11.2026";
+  }
+
+  CHANGELOG = {
+    from:"25.11.2026",
+    to:"26.11.2026",
+    items:[{
+      group:"SECTIONS",sec:"g7",secLabel:"G7 / REPO · ЕС",
+      title:"Ukraine Support Loan: Совет утвердил распределение до €45 млрд на 2027 год",
+      refTitle:"«Ukraine Support Loan» ЕС — заём на репарационной основе (не прямое изъятие активов ЦБ РФ)",
+      status:"active",kind:"upd"
+    }]
+  };
+  DEADLINES.checked = "26.11.2026";
+  SOURCE_REGISTRY.checked = "26.11.2026";
+
+  OFFICER_CONCLUSION = {
+    text:"Заключение на 26.11.2026. Полный пробный прогон выполнен 26.11.2026 в 02:41 (CET, Амстердам). Период мониторинга — после среза 25.11.2026.\n\nГЛАВНОЕ. (1) ЕС/G7: опубликовано Решение Совета (EU) 2026/2623 — на 2027 год в рамках действующего Ukraine Support Loan доступно до €45 млрд, включая до €13,3 млрд бюджетной и до €31,7 млрд оборонной поддержки; это реализация Регламента 2026/467, не новый санкционный пакет и не конфискация активов ЦБ РФ (A). (2) Проект 22-го пакета ЕС остаётся на стадии обсуждения: окончательных регламентов и решения Совета в Official Journal на момент среза нет (A). (3) США и Великобритания: после GL 131L от 19.11 и Russia notice от 20.11 новых Russia-related мер на 26.11 не опубликовано; обновление OFSI FAQ от 24.11 не меняет выводы российских карточек (A). (4) Канада, Швейцария, Австралия, Япония и Новая Зеландия: новых мер после среза 25.11 не выявлено по официальным лентам. (5) Российские ответные меры и ограничения вывоза: новых релевантных актов после среза 25.11 не выявлено; действующий реестр и контроль срочных мер сохранены. (6) Bringing to justice и FATCA/CRS/ORS: новых подтверждённых событий, меняющих карточки, нет. (7) Закрытые разделы: ключи, расшифровка, роли, источники и маршруты эскалации проверены без раскрытия конфиденциального содержимого.\n\nОЦЕНКА. Решение 2026/2623 создаёт утверждённый объём поддержки Украины на 2027 год, но само по себе не расширяет запреты для российского бизнеса. Главный краткосрочный внешний риск — согласование окончательного текста 22-го пакета ЕС.\n\nДЕЙСТВИЯ. (а) учитывать распределение €45 млрд при анализе режима immobilised assets и REPO; (б) не применять проект 22-го пакета до публикации окончательных актов; (в) продолжить ежедневный контроль OFAC, OJ EU, FCDO/OFSI и официальных российских источников; (г) перед операциями проверять актуальные списки и лицензии на дату сделки.",
+    footnote:"Подготовлено по официальным источникам уровня A. Все открытые и закрытые разделы проверены; отсутствие новых актов за период не трактуется как отсутствие действующих ограничений. Аналитический материал, не юридическое или налоговое заключение.",
+    archive:[priorConclusion].concat(Array.isArray(OFFICER_CONCLUSION.archive)?OFFICER_CONCLUSION.archive:[])
+  };
+
+  EXEC_SUMMARY = {
+    title:"Санкции против России: сводка для руководства",
+    points:[
+      {h:"ЕС / Ukraine Support Loan",t:"Решением (EU) 2026/2623 на 2027 год утверждено до €45 млрд: €13,3 млрд бюджетной и €31,7 млрд оборонной поддержки (A)."},
+      {h:"ЕС — 22-й пакет",t:"Проект обсуждается; окончательные акты и публикация в OJ на момент среза отсутствуют."},
+      {h:"США и Великобритания",t:"Новых Russia-related мер после среза 25.11 не опубликовано; действующие GL и notices сохраняют статус."},
+      {h:"Прочие юрисдикции",t:"Канада, Швейцария, Австралия, Япония и Новая Зеландия: новых мер после среза 25.11 не выявлено."},
+      {h:"Россия",t:"Новых релевантных ответных мер и ограничений вывоза после среза 25.11 не выявлено; действующий реестр пересверен."},
+      {h:"Закрытые разделы",t:"Доступ, расшифровка и контрольные данные проверены; содержательных изменений не требуется."}
+    ],
+    actions:[
+      "Не применять проект 22-го пакета ЕС до принятия и публикации правовых актов.",
+      "Учитывать Решение 2026/2623 в анализе Ukraine Support Loan и immobilised assets.",
+      "Продолжить контроль официальных лент и сроков действующих лицензий.",
+      "Проверять списки, ownership/control и лицензии непосредственно перед операцией."
+    ]
+  };
+})();
+
 const MS_DAY = 86400000;
 function parseRuDate(s){ const m = /(\d{1,2})\.(\d{1,2})\.(\d{4})/.exec(s || ""); return m ? new Date(+m[3], +m[2]-1, +m[1]) : null; }
 function parseIsoDate(s){ const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ""); return m ? new Date(+m[1], +m[2]-1, +m[3]) : null; }
@@ -12356,6 +12430,149 @@ document.getElementById("btnPrint2").addEventListener("click", ()=>window.print(
    author/copyright/robots). */
 document.addEventListener("contextmenu", (e)=>e.preventDefault());
 
+/* ================= LIVING ICE PLATES =================
+   A dedicated canvas moves independent, shared-edge ice plates. Their gaps
+   widen and narrow on different cycles, so fissures visibly open and close
+   instead of moving one blurred photograph across the viewport. */
+(function(){
+  const canvas = document.getElementById("iceFX");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d", {alpha:true});
+  if(!ctx) return;
+
+  const image = new Image();
+  image.decoding = "async";
+  image.src = "assets/baikal-ice.jpg";
+  let imageReady = false;
+  image.addEventListener("load",()=>{ imageReady=true; draw(performance.now(),true); });
+
+  let width=0, height=0, dpr=1, grid=[], plates=[], branches=[];
+  let elapsed=0, lastFrame=null, pending=0;
+  let paused = !!window.__cmMotionPaused || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function seeded(n){
+    const x = Math.sin(n*127.1+311.7)*43758.5453;
+    return x-Math.floor(x);
+  }
+  function rebuild(){
+    dpr=Math.min(window.devicePixelRatio||1,1.5);
+    width=Math.max(1,window.innerWidth); height=Math.max(1,window.innerHeight);
+    canvas.width=Math.floor(width*dpr); canvas.height=Math.floor(height*dpr);
+    canvas.style.width=width+"px"; canvas.style.height=height+"px";
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+
+    const cols=width<720?4:6, rows=height<620?3:4;
+    grid=Array.from({length:rows+1},(_,r)=>Array.from({length:cols+1},(_,c)=>{
+      const edgeX=c===0||c===cols, edgeY=r===0||r===rows;
+      const jx=edgeX?0:(seeded(r*31+c*17)-.5)*(width/cols)*.24;
+      const jy=edgeY?0:(seeded(r*47+c*23+9)-.5)*(height/rows)*.22;
+      return {x:c*width/cols+jx,y:r*height/rows+jy};
+    }));
+    plates=[];
+    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+      const pts=[grid[r][c],grid[r][c+1],grid[r+1][c+1],grid[r+1][c]];
+      const cx=pts.reduce((s,p)=>s+p.x,0)/4, cy=pts.reduce((s,p)=>s+p.y,0)/4;
+      const id=r*cols+c+1;
+      plates.push({pts,cx,cy,phase:seeded(id*7)*Math.PI*2,speed:.16+seeded(id*13)*.16,
+        amp:1.8+seeded(id*19)*3.2,angle:(seeded(id*29)-.5)*.012});
+    }
+    branches=plates.filter((_,i)=>i%3===1).map((p,i)=>{
+      const a=p.pts[0], b=p.pts[2], turn=(seeded(i*41+5)-.5)*.22;
+      return {phase:seeded(i*53+4)*Math.PI*2,points:[
+        {x:a.x*.62+p.cx*.38,y:a.y*.62+p.cy*.38},
+        {x:p.cx+(b.x-a.x)*turn,y:p.cy+(b.y-a.y)*turn},
+        {x:b.x*.58+p.cx*.42,y:b.y*.58+p.cy*.42}
+      ]};
+    });
+    draw(performance.now(),true);
+  }
+  function imageRect(){
+    if(!imageReady) return null;
+    const scale=Math.max(width/image.naturalWidth,height/image.naturalHeight);
+    const w=image.naturalWidth*scale,h=image.naturalHeight*scale;
+    return {x:(width-w)/2,y:(height-h)/2,w,h};
+  }
+  function plateState(p){
+    const pulse=(Math.sin(elapsed*p.speed+p.phase)+1)/2;
+    const gap=1.1+pulse*4.4;
+    const dx=Math.cos(elapsed*p.speed*.67+p.phase)*p.amp;
+    const dy=Math.sin(elapsed*p.speed*.83+p.phase)*p.amp*.62;
+    const rotation=Math.sin(elapsed*p.speed*.53+p.phase)*p.angle;
+    const points=p.pts.map(q=>{
+      const vx=p.cx-q.x,vy=p.cy-q.y,len=Math.hypot(vx,vy)||1;
+      return {x:q.x+vx/len*gap-p.cx,y:q.y+vy/len*gap-p.cy};
+    });
+    return {gap,dx,dy,rotation,points};
+  }
+  function trace(points){
+    ctx.beginPath(); ctx.moveTo(points[0].x,points[0].y);
+    for(let i=1;i<points.length;i++) ctx.lineTo(points[i].x,points[i].y);
+    ctx.closePath();
+  }
+  function drawPlate(p,rect){
+    const s=plateState(p);
+    ctx.save();
+    ctx.translate(p.cx+s.dx,p.cy+s.dy); ctx.rotate(s.rotation);
+    trace(s.points); ctx.clip();
+    if(rect){
+      ctx.globalAlpha=.66;
+      ctx.drawImage(image,rect.x-p.cx,rect.y-p.cy,rect.w,rect.h);
+    }else{
+      const g=ctx.createLinearGradient(-160,-120,180,150);
+      g.addColorStop(0,"rgba(195,239,248,.76)"); g.addColorStop(.55,"rgba(73,157,185,.58)"); g.addColorStop(1,"rgba(209,245,250,.68)");
+      ctx.fillStyle=g; ctx.fillRect(-width,-height,width*2,height*2);
+    }
+    ctx.globalAlpha=.48;
+    ctx.strokeStyle="rgba(225,252,255,.72)"; ctx.lineWidth=.7; trace(s.points); ctx.stroke();
+    ctx.restore();
+  }
+  function drawCrackLine(points,open){
+    ctx.save(); ctx.lineCap="round";ctx.lineJoin="round";
+    ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);
+    for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);
+    ctx.strokeStyle=`rgba(0,22,35,${.42+open*.20})`;ctx.lineWidth=1.2+open*5.4;ctx.stroke();
+    ctx.strokeStyle=`rgba(168,237,249,${.24+open*.24})`;ctx.lineWidth=.55+open*.75;ctx.stroke();
+    ctx.restore();
+  }
+  function draw(now,force){
+    pending=0;
+    if(!force && lastFrame!==null && now-lastFrame<32){ schedule(); return; }
+    const dt=lastFrame===null?0:Math.min((now-lastFrame)/1000,.08);
+    lastFrame=now; if(!paused) elapsed+=dt;
+    ctx.clearRect(0,0,width,height);
+
+    const rect=imageRect();
+    plates.forEach(p=>drawPlate(p,rect));
+
+    for(let r=0;r<grid.length;r++){
+      const open=(Math.sin(elapsed*.21+r*.91)+1)/2;
+      drawCrackLine(grid[r],open);
+    }
+    for(let c=0;c<grid[0].length;c++){
+      const line=grid.map(row=>row[c]);
+      const open=(Math.sin(elapsed*.18+c*1.17+1.4)+1)/2;
+      drawCrackLine(line,open);
+    }
+    branches.forEach((b,i)=>{
+      const open=(Math.sin(elapsed*(.28+(i%3)*.04)+b.phase)+1)/2;
+      drawCrackLine(b.points,open*.72);
+    });
+    schedule();
+  }
+  function schedule(){
+    cancelAnimationFrame(pending);
+    if(!paused&&!document.hidden) pending=requestAnimationFrame(draw);
+  }
+  function setPaused(value){
+    paused=!!value; lastFrame=null;
+    if(paused) draw(performance.now(),true); else schedule();
+  }
+  window.addEventListener("cm:motion",e=>setPaused(e.detail&&e.detail.paused));
+  window.addEventListener("resize",rebuild,{passive:true});
+  document.addEventListener("visibilitychange",()=>{ if(document.hidden) cancelAnimationFrame(pending); else schedule(); });
+  rebuild(); schedule();
+})();
+
 /* ================= ANIMATED WATER SURFACE + SHARKS =================
    Canvas-based (not Flash — Flash was retired in 2020 and no browser can
    run it anymore; this canvas/requestAnimationFrame loop is the modern
@@ -12675,6 +12892,8 @@ document.addEventListener("contextmenu", (e)=>e.preventDefault());
     if(!document.hidden) pendingFrame = requestAnimationFrame(frame);
     document.body.classList.toggle("ice-paused", paused);
     motionButton.textContent = paused ? "Включить анимацию" : "Пауза анимации";
+    window.__cmMotionPaused = paused;
+    window.dispatchEvent(new CustomEvent("cm:motion",{detail:{paused}}));
   }
   motionButton.hidden = false;
   motionButton.addEventListener("click",()=>{paused=!paused;syncMotion();});
