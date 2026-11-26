@@ -346,7 +346,7 @@ button.lnk:hover{color:var(--petrol);text-decoration:underline;}
   body.print-exec .exec-actions{display:none;}
 }
 
-/* ===== Вкладки в одну строку + сворачивание в меню (с 15.10.2026) ===== */
+/* ===== Вкладки: прокручиваемая строка + таблица (с 26.11.2026) ===== */
 header.top .bar{max-width:none;padding:8px 24px;flex-wrap:nowrap;gap:14px;}
 .tabnav{position:relative;display:flex;align-items:center;gap:12px;min-width:0;flex:1 1 auto;}
 .tabs{flex-wrap:nowrap;gap:16px;min-width:0;}
@@ -366,15 +366,21 @@ header.top .badge-live{cursor:help;}
 .tabmenu-expand{display:none;}
 header.top.tabs-short .tab-label-full{display:none;}
 header.top.tabs-short .tab-label-short{display:inline;}
+header.top.tabs-inline #viewTabs{display:flex;flex:1 1 auto;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.38) transparent;padding-bottom:2px;}
+header.top.tabs-inline #viewTabs::-webkit-scrollbar{height:4px;}
+header.top.tabs-inline #viewTabs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.38);border-radius:4px;}
+header.top.tabs-inline .tabbtn{flex:0 0 auto;}
 header.top.tabs-menu .tabmenu-current,header.top.tabs-menu .tabmenu-caret{display:inline;}
-header.top.tabs-menu #viewTabs{display:none;position:absolute;top:calc(100% + 10px);left:0;width:auto;flex-direction:column;align-items:stretch;gap:0;background:rgba(1,10,13,.97);border:1px solid rgba(255,255,255,.18);padding:6px 0;min-width:320px;z-index:60;box-shadow:0 12px 32px rgba(0,0,0,.45);}
-header.top.tabs-menu #viewTabs.open{display:flex;}
-header.top.tabs-menu .tabbtn{padding:10px 16px;font-size:13px;justify-content:flex-start;}
+header.top.tabs-menu #viewTabs{display:none;position:absolute;top:calc(100% + 10px);left:0;width:min(840px,calc(100vw - 48px));grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:1px;background:rgba(1,10,13,.97);border:1px solid rgba(255,255,255,.18);padding:7px;z-index:60;box-shadow:0 12px 32px rgba(0,0,0,.45);}
+header.top.tabs-menu #viewTabs.open{display:grid;}
+header.top.tabs-menu .tabbtn{padding:11px 13px;font-size:12.5px;justify-content:flex-start;border:1px solid rgba(255,255,255,.10);min-height:44px;white-space:normal;text-align:left;}
 header.top.tabs-menu .tabbtn.active::after{left:0;right:auto;top:0;bottom:0;width:3px;height:auto;}
 header.top.tabs-menu .tab-label-full{display:inline !important;}
 header.top.tabs-menu .tab-label-short{display:none !important;}
-header.top.tabs-menu .tabmenu-expand{display:block;background:none;border:none;border-top:1px solid rgba(255,255,255,.12);margin-top:4px;color:var(--light-caption);font-size:12px;text-align:left;padding:10px 16px;}
+header.top.tabs-menu .tabmenu-expand{display:block;grid-column:1/-1;background:none;border:none;border-top:1px solid rgba(255,255,255,.18);margin-top:5px;color:var(--light-caption);font-size:12px;text-align:left;padding:11px 13px;}
 header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
+header.top.tabs-table-open{position:fixed;inset:0 0 auto 0;z-index:500;}
+@media(max-width:880px){header.top.tabs-menu #viewTabs{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:640px){header.top .bar{flex-wrap:wrap;} .tabnav{width:100%;} .right-cluster{flex-wrap:wrap;}}
 /* EV-CSS-START */
 /* ===== Раздел «Внешние мероприятия» (санкционный фильтр мероприятий). Стили изолированы внутри #viewEvents и #evPrintArea ===== */
@@ -678,8 +684,8 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
   /* A crisp, still photographic bed sits below the procedural ice plates. The
      canvases move actual plate geometry; these pseudo-elements only breathe
      light, so the texture never turns into a translated, blurred smear. */
-  body::before {content:""; position:fixed; inset:0; z-index:-3; pointer-events:none; background-image:linear-gradient(rgba(161,228,242,.12),rgba(31,111,142,.18)),var(--ice-photo,none); background-size:cover; background-position:50% 48%; opacity:.58; animation:ice-sheet-light 18s ease-in-out infinite alternate;}
-  body::after {content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(ellipse at 25% 18%,rgba(225,250,255,.22),transparent 42%),linear-gradient(115deg,transparent 22%,rgba(198,241,251,.10) 48%,transparent 72%); opacity:.11; animation:ice-crack-light 12s ease-in-out infinite alternate;}
+  body::before {content:""; position:fixed; inset:0; z-index:-3; pointer-events:none; background-image:linear-gradient(rgba(161,228,242,.12),rgba(31,111,142,.18)),var(--ice-photo,none); background-size:cover; background-position:50% 48%; opacity:.58; animation:ice-sheet-light 42s ease-in-out infinite alternate;}
+  body::after {content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(ellipse at 25% 18%,rgba(225,250,255,.22),transparent 42%),linear-gradient(115deg,transparent 22%,rgba(198,241,251,.10) 48%,transparent 72%); opacity:.11; animation:ice-crack-light 34s ease-in-out infinite alternate;}
   @keyframes ice-sheet-light {from{opacity:.54;}to{opacity:.62;}}
   @keyframes ice-crack-light {0%{opacity:.07;}48%{opacity:.15;}100%{opacity:.09;}}
   body.ice-paused::before,body.ice-paused::after {animation-play-state:paused;}
@@ -702,7 +708,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
     27% {transform:scale(1.42);box-shadow:0 0 0 4px rgba(32,220,134,.10);opacity:1;}
     36% {transform:scale(1);box-shadow:0 0 0 0 rgba(32,220,134,0);opacity:.88;}
   }
-  .hero {padding:clamp(48px,6vw,92px) 0 clamp(35px,4.1vw,64px);}
+  .hero {padding:clamp(48px,6vw,92px) 0 clamp(35px,4.1vw,64px);z-index:0;isolation:isolate;}
   .hero::after {background:linear-gradient(90deg,rgba(3,21,42,.94) 0%,rgba(4,24,47,.91) 25%,rgba(6,32,53,.75) 48%,rgba(9,41,65,.25) 70%,transparent 100%);}
   .hero .inner {max-width:min(740px,70%);}
   .eyebrow {color:#b7edff; font-size:11px; font-weight:700; letter-spacing:.14em; border-left:0; padding:0; margin-bottom:15px;}
@@ -737,23 +743,28 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
   .brief-grid .prose {border-top:3px solid #4d9fc9;}
   .tag,.k-new,.badge.st-announced {color:#115b84; background:#e8f4fc; border-color:#c8dfec;}
   .btn-digest,.more-toggle summary {background:#fff;}
-  #briefSection .brief-grid {grid-template-columns:1fr;gap:18px;}
-  #briefSection .brief-col:first-child {background:rgba(218,238,241,.82);border:1px solid rgba(255,255,255,.42);border-top:0;box-shadow:none;padding:24px 28px 26px;backdrop-filter:blur(2px);}
-  #briefSection .brief-col:first-child h3 {color:#009da2;font-size:21px;line-height:1.18;margin-bottom:12px;letter-spacing:.01em;}
+  #briefSection .brief-grid {grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:18px;}
+  #briefSection .brief-col {min-width:0;background:rgba(240,246,252,.94);border:1px solid rgba(190,214,232,.88);border-top:3px solid #4d9fc9;box-shadow:0 5px 16px rgba(16,46,72,.14);}
+  #briefSection .brief-col:first-child {background:rgba(226,237,248,.92);padding:24px 28px 26px;backdrop-filter:blur(2px);}
+  #briefSection .brief-col h3 {color:var(--blue);font-size:21px;line-height:1.18;margin-bottom:12px;letter-spacing:.01em;}
   #briefSection .brief-col:first-child .brief-sub {color:#768399;font-size:13px;margin:0 0 7px;}
   #briefSection .brief-col:first-child .brief-list {gap:0;}
   #briefSection .brief-col:first-child .brief-list li {grid-template-columns:100px 1fr;gap:14px;padding:13px 0;border-bottom:1px dashed rgba(255,255,255,.78);font-size:14px;line-height:1.45;}
-  #briefSection .brief-col:first-child .brief-list .k {min-width:100px;padding:4px 9px;background:#f7ffff;}
+  #briefSection .brief-col:first-child .brief-list .k {min-width:100px;padding:4px 9px;background:#f4f7fc;color:var(--blue);border-color:#cadcf0;}
+  #briefSection .brief-col:first-child .brief-list .k-new {background:#edf4ff;color:var(--blue);border-color:#cadcf0;}
   #briefSection .brief-col:first-child .brief-list .k-upd {background:#f1f6ff;color:#2f6fed;border-color:#d5e2ff;}
   #briefSection .brief-col:first-child .brief-list .sec {color:#778299;font-size:11.5px;margin-bottom:3px;}
   #briefSection .brief-col:first-child button.lnk,#briefSection .brief-col:first-child .lnk-static {color:#101827;font-size:14.5px;font-weight:750;line-height:1.43;}
-  #briefSection .brief-col:first-child button.lnk:hover {color:#007f84;}
+  #briefSection .brief-col:first-child button.lnk:hover {color:#174b8a;}
+  #briefSection .more-toggle summary {color:var(--blue);border-color:var(--blue);}
+  #briefSection .more-toggle summary:hover {background:#eaf2ff;}
   .changelog-previous {margin-top:18px;padding-top:14px;border-top:1px solid var(--border);}
-  .changelog-previous > summary {cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#009da2;font-weight:850;font-size:15px;}
+  .changelog-previous > summary {cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--blue);font-weight:850;font-size:15px;}
   .changelog-previous > summary::-webkit-details-marker {display:none;}
-  .changelog-previous > summary::after {content:"▾";color:var(--petrol);transition:transform .18s;}
+  .changelog-previous > summary::after {content:"▾";color:var(--blue);transition:transform .18s;}
   .changelog-previous[open] > summary::after {transform:rotate(180deg);}
   .changelog-previous .brief-sub {margin-top:8px;}
+  @media(max-width:980px){#briefSection .brief-grid {grid-template-columns:1fr;}}
   @media(max-width:620px){
     #briefSection .brief-col:first-child {padding:20px 16px 22px;}
     #briefSection .brief-col:first-child .brief-list li {grid-template-columns:1fr;gap:6px;}
@@ -782,7 +793,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
     .hero-stats > div {min-width:68px;}
     .hero {padding-block:38px 32px;}
     .tabmenu-btn {max-width:100%;}
-    header.top.tabs-menu #viewTabs {min-width:min(320px,calc(100vw - 32px)); max-width:calc(100vw - 32px);}
+    header.top.tabs-menu #viewTabs {width:calc(100vw - 32px);min-width:0;max-width:calc(100vw - 32px);grid-template-columns:1fr;}
     header.top.tabs-menu .tabbtn {white-space:normal;}
     .srctable tr,.compare-table tr {display:table-row;}
     .srctable td,.compare-table td {white-space:normal; min-width:9rem;}
@@ -810,7 +821,7 @@ header.top.tabs-menu .tabmenu-expand:hover{color:var(--white);}
 <header class="top">
   <div class="bar">
     <div class="tabnav" id="tabNav">
-      <button type="button" class="tabmenu-btn" id="tabMenuBtn" aria-haspopup="true" aria-expanded="false" title="Свернуть вкладки в меню / открыть меню"><span class="tabmenu-ico">&#9776;</span><span class="tabmenu-current" id="tabMenuCurrent">КОМПЛАЕНС-КАРТА</span><span class="tabmenu-caret">&#9662;</span></button>
+      <button type="button" class="tabmenu-btn" id="tabMenuBtn" aria-haspopup="true" aria-expanded="false" aria-label="Показать вкладки таблицей" title="Показать вкладки таблицей"><span class="tabmenu-ico">&#9776;</span><span class="tabmenu-current" id="tabMenuCurrent">КОМПЛАЕНС-КАРТА</span><span class="tabmenu-caret">&#9662;</span></button>
     <div class="tabs" id="viewTabs">
       <button class="tabbtn active" data-view="map"><span class="tab-dot green"></span><span class="tab-label-full">КОМПЛАЕНС-КАРТА</span><span class="tab-label-short">КАРТА</span></button>
       <button class="tabbtn" data-view="guide"><span class="tab-dot red"></span><span class="tab-label-full">МЕТОДОЛОГИЯ И ИСТОЧНИКИ</span><span class="tab-label-short">МЕТОДОЛОГИЯ</span></button>
@@ -11917,7 +11928,7 @@ document.querySelectorAll(".tabbtn").forEach(btn=>{
     }
   });
 });
-/* ================= ВКЛАДКИ: ОДНА СТРОКА / МЕНЮ ================= */
+/* ================= ВКЛАДКИ: ОДНА СТРОКА / ТАБЛИЦА ================= */
 (function(){
   const hdr=document.querySelector('header.top'), bar=hdr&&hdr.querySelector('.bar'), tabs=document.getElementById('viewTabs'),
         btn=document.getElementById('tabMenuBtn'), cur=document.getElementById('tabMenuCurrent'), exp=document.getElementById('tabMenuExpand');
@@ -11925,19 +11936,21 @@ document.querySelectorAll(".tabbtn").forEach(btn=>{
   let pref='inline'; try{ pref=localStorage.getItem('cmTabsMode')||'inline'; }catch(e){}
   const save=v=>{ pref=v; try{ localStorage.setItem('cmTabsMode',v); }catch(e){} };
   const setCur=()=>{ const a=tabs.querySelector('.tabbtn.active .tab-label-full'); if(a&&cur) cur.textContent=a.textContent; };
-  const close=()=>{ tabs.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
-  const fits=()=>tabs.scrollWidth<=tabs.clientWidth+1&&bar.scrollWidth<=bar.clientWidth+1;
+  const close=()=>{ tabs.classList.remove('open'); hdr.classList.remove('tabs-table-open'); btn.setAttribute('aria-expanded','false'); };
+  const setButtonState=()=>{
+    const tableMode=pref==='menu';
+    const label=tableMode?'Открыть или закрыть таблицу вкладок':'Показать вкладки таблицей';
+    btn.title=label; btn.setAttribute('aria-label',label);
+  };
   function layout(){
     const ot=document.getElementById('openedToday'), bl=hdr.querySelector('.badge-live'); if(ot&&bl&&ot.textContent) bl.title=ot.textContent;
-    close(); hdr.classList.remove('tabs-short');
-    if(pref==='menu'){ hdr.classList.add('tabs-menu'); setCur(); return; }
-    hdr.classList.remove('tabs-menu'); if(fits()) return;
-    hdr.classList.add('tabs-short'); if(fits()) return;
-    hdr.classList.remove('tabs-short'); hdr.classList.add('tabs-menu'); setCur();
+    close(); hdr.classList.remove('tabs-short','tabs-menu','tabs-inline');
+    hdr.classList.add(pref==='menu'?'tabs-menu':'tabs-inline');
+    setCur(); setButtonState();
   }
   btn.addEventListener('click',e=>{ e.stopPropagation();
-    if(hdr.classList.contains('tabs-menu')){ const o=tabs.classList.toggle('open'); btn.setAttribute('aria-expanded',o?'true':'false'); }
-    else { save('menu'); layout(); } });
+    if(hdr.classList.contains('tabs-menu')){ const o=tabs.classList.toggle('open'); hdr.classList.toggle('tabs-table-open',o); btn.setAttribute('aria-expanded',o?'true':'false'); }
+    else { save('menu'); layout(); tabs.classList.add('open'); hdr.classList.add('tabs-table-open'); btn.setAttribute('aria-expanded','true'); } });
   if(exp) exp.addEventListener('click',e=>{ e.stopPropagation(); save('inline'); layout(); });
   tabs.addEventListener('click',e=>{ if(e.target.closest('.tabbtn')) setTimeout(()=>{ setCur(); close(); },0); });
   document.addEventListener('click',e=>{ if(!e.target.closest('#tabNav')) close(); });
@@ -12593,7 +12606,7 @@ void main(){
   function render(){gl.uniform1f(uPh,phase);gl.drawArrays(gl.TRIANGLES,0,3);}
   function frame(now){
     pending=0;
-    if(now-lastDraw>=40){const dt=Math.min((now-last)/1000,.25);last=now;lastDraw=now;phase=(phase+dt*.024)%(Math.PI*2);render();}
+    if(now-lastDraw>=32){const dt=Math.min((now-last)/1000,.25);last=now;lastDraw=now;phase=(phase+dt*.0007)%(Math.PI*2);render();}
     if(!paused&&!document.hidden) pending=requestAnimationFrame(frame);
   }
   function sync(){
@@ -12651,7 +12664,7 @@ void main(){
       const pts=[grid[r][c],grid[r][c+1],grid[r+1][c+1],grid[r+1][c]];
       const cx=pts.reduce((s,p)=>s+p.x,0)/4, cy=pts.reduce((s,p)=>s+p.y,0)/4;
       const id=r*cols+c+1;
-      plates.push({pts,cx,cy,phase:seeded(id*7)*Math.PI*2,speed:.16+seeded(id*13)*.16,
+      plates.push({pts,cx,cy,phase:seeded(id*7)*Math.PI*2,speed:.065+seeded(id*13)*.06,
         amp:1.8+seeded(id*19)*3.2,angle:(seeded(id*29)-.5)*.012});
     }
     branches=plates.filter((_,i)=>i%3===1).map((p,i)=>{
@@ -12723,16 +12736,16 @@ void main(){
     plates.forEach(p=>drawPlate(p,rect));
 
     for(let r=0;r<grid.length;r++){
-      const open=(Math.sin(elapsed*.21+r*.91)+1)/2;
+      const open=(Math.sin(elapsed*.085+r*.91)+1)/2;
       drawCrackLine(grid[r],open);
     }
     for(let c=0;c<grid[0].length;c++){
       const line=grid.map(row=>row[c]);
-      const open=(Math.sin(elapsed*.18+c*1.17+1.4)+1)/2;
+      const open=(Math.sin(elapsed*.075+c*1.17+1.4)+1)/2;
       drawCrackLine(line,open);
     }
     branches.forEach((b,i)=>{
-      const open=(Math.sin(elapsed*(.28+(i%3)*.04)+b.phase)+1)/2;
+      const open=(Math.sin(elapsed*(.11+(i%3)*.018)+b.phase)+1)/2;
       drawCrackLine(b.points,open*.72);
     });
     schedule();
